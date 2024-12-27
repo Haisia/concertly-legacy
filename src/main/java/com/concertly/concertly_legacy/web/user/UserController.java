@@ -46,7 +46,8 @@ public class UserController {
 
     final UserDetails userDetails = userDetailsService.loadUserByUsername(request.getEmail());
 
-    return ResponseEntity.status(HttpStatus.OK).body(new LoginResponse(jwtUtil.generateToken(userDetails.getUsername())));
+    String generatedToken = jwtUtil.generateToken(userDetails.getUsername());
+    return ResponseEntity.status(HttpStatus.OK).body(new LoginResponse(generatedToken));
   }
 
 }
