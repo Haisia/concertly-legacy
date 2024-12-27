@@ -1,9 +1,11 @@
 package com.concertly.concertly_legacy.domain.concert.entity;
 
 import com.concertly.concertly_legacy.commons.entity.BaseEntity;
+import com.concertly.concertly_legacy.commons.exceptions.AlreadyExistException;
 import com.concertly.concertly_legacy.commons.exceptions.NotFoundException;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.Where;
@@ -32,7 +34,31 @@ public class Concert extends BaseEntity {
   private LocalDateTime endTime;
 
   @OneToMany(mappedBy = "concert", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
-  private List<Seat> seatList = new ArrayList<>();
+  private final List<Seat> seatList = new ArrayList<>();
+
+  @Builder
+  private Concert(String title, String location, LocalDateTime startTime, LocalDateTime endTime) {
+    this.title = title;
+    this.location = location;
+    this.startTime = startTime;
+    this.endTime = endTime;
+  }
+
+  public boolean isAlreadyExistSeat(String seatNumber) {
+    return this.seatList.stream()
+      .anyMatch(seat -> seat.getSeatNumber().equals(seatNumber))
+      ;
+  }
+
+  public Seat createSeat(String seatNumber, Long price) {
+    if (isAlreadyExistSeat(seatNumber)) {
+      throw new AlreadyExistException(seatNumber);
+    }
+
+    Seat seat = new Seat(seatNumber, price, this);
+    this.seatList.add(seat);
+    return seat;
+  }
 
   public List<Seat> getAllSeatList() {
     return this.seatList;

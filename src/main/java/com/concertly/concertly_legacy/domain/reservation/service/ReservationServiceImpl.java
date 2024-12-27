@@ -16,13 +16,14 @@ import org.springframework.transaction.annotation.Transactional;
 
 @RequiredArgsConstructor
 @Service
-public class ReservationServiceImpl {
+public class ReservationServiceImpl implements ReservationService {
 
   private final ConcertRepository concertRepository;
   private final ReservationRepository reservationRepository;
   private final UserRepository userRepository;
 
   @Transactional
+  @Override
   public void concertReservation(ConcertReservationRequest request, Long requesterId) {
     Concert concert = concertRepository.findWithSeatsById(request.getConcertId())
       .orElseThrow(() -> new NotFoundException("Concert", "concertId", request.getConcertId().toString()));

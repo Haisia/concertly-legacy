@@ -32,6 +32,18 @@ public class Seat extends BaseEntity {
   @OneToOne(mappedBy = "seat", cascade = CascadeType.ALL, orphanRemoval = true)
   private Reservation reservation;
 
+  /**
+   * 주의) 이 생성자는 {@link Concert#createSeat(String, Long)} 에서만 호출해야 합니다.
+   * 이 생성자를 직접 호출하지 말고, 반드시 Concert 객체를 통해 Seat 를 생성하여
+   * Concert 와 Seat 간의 관계를 일관성 있게 유지하세요.
+   */
+  protected Seat(String seatNumber, Long price, Concert concert) {
+    this.seatNumber = seatNumber;
+    this.price = price;
+    this.concert = concert;
+    this.status = SeatStatus.AVAILABLE;
+  }
+
   public boolean isAvailable() {
     return status == SeatStatus.AVAILABLE;
   }

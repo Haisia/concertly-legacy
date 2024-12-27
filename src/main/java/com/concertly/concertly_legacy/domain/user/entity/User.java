@@ -9,6 +9,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.Where;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Getter
@@ -27,8 +28,8 @@ public class User extends BaseEntity {
   @Column(name = "point", nullable = false)
   private Point point;
 
-  @OneToMany(mappedBy = "reservation", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
-  private List<Reservation> reservationList;
+  @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+  private final List<Reservation> reservationList = new ArrayList<>();
 
   private User(String email, String password) {
     this.email = email;

@@ -9,6 +9,7 @@ import java.util.Collection;
 import java.util.List;
 
 @RequiredArgsConstructor
+
 public class ConcertlyUserDetail implements UserDetails {
 
   private final User user;
