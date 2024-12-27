@@ -1,15 +1,15 @@
 package com.concertly.concertly_legacy.domain.user.entity;
 
 import com.concertly.concertly_legacy.commons.entity.BaseEntity;
+import com.concertly.concertly_legacy.domain.reservation.entity.Reservation;
 import com.concertly.concertly_legacy.domain.user.entity.vo.Point;
-import jakarta.persistence.Column;
-import jakarta.persistence.Embedded;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.Where;
+
+import java.util.List;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -26,6 +26,9 @@ public class User extends BaseEntity {
   @Embedded
   @Column(name = "point", nullable = false)
   private Point point;
+
+  @OneToMany(mappedBy = "reservation", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+  private List<Reservation> reservationList;
 
   private User(String email, String password) {
     this.email = email;

@@ -1,6 +1,7 @@
 package com.concertly.concertly_legacy.commons.enums;
 
-public enum ConcertStatus {
+public enum SeatStatus {
   AVAILABLE,
   RESERVED,
+  COMPLETED,
 }

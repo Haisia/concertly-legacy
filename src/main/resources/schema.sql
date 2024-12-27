@@ -34,6 +34,7 @@ create table if not exists seats
   concert_id    int           not null comment '콘서트 pk',
   seat_number   varchar(255)  not null comment '좌석 번호 ex) a1, a2, ... , e1, e2, ...',
   status        enum('AVAILABLE', 'RESERVED')   not null default 'AVAILABLE' comment '좌석 상태 ex) AVAILABLE, RESERVED',
+  price         BIGINT        not null comment '좌석 가격',
 
   deleted     varchar(1) not null default 'N',
   created_at  datetime(6) not null default now(),
@@ -42,3 +43,18 @@ create table if not exists seats
   updated_by  varchar(255) null,
   constraint fk_seats_concert_id foreign key (concert_id) references concerts (id)
 ) comment '콘서트 좌석 테이블';
+
+create table if not exists reservation
+(
+  id              int           not null auto_increment comment 'pk' primary key,
+  seat_id         int           not null comment '좌석 pk',
+  user_id         int  not null comment '예약자',
+
+  deleted     varchar(1) not null default 'N',
+  created_at  datetime(6) not null default now(),
+  created_by  varchar(255) null,
+  updated_at  datetime(6) null,
+  updated_by  varchar(255) null,
+  constraint fk_reservation_seat_id foreign key (seat_id) references concerts (id),
+  constraint fk_reservation_user_id foreign key (user_id) references concerts (id)
+) comment '콘서트 예약 테이블';
