@@ -1,6 +1,6 @@
 package com.concertly.concertly_legacy.domain.user.entity.vo;
 
-import com.concertly.concertly_legacy.domain.exception.InvalidParameterException;
+import com.concertly.concertly_legacy.commons.exceptions.InvalidParameterException;
 import jakarta.persistence.*;
 import lombok.Getter;
 

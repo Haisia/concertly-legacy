@@ -1,4 +1,4 @@
-package com.concertly.concertly_legacy.domain.exception;
+package com.concertly.concertly_legacy.commons.exceptions;
 
 public class InvalidParameterException extends RuntimeException {
   public InvalidParameterException(String message) {
