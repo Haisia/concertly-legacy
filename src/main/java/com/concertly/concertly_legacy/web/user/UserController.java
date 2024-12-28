@@ -9,6 +9,7 @@ import com.concertly.concertly_legacy.web.user.dto.ChargePointRequest;
 import com.concertly.concertly_legacy.web.user.dto.CreateUserRequest;
 import com.concertly.concertly_legacy.web.user.dto.LoginRequest;
 import com.concertly.concertly_legacy.web.user.dto.LoginResponse;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -37,13 +38,13 @@ public class UserController {
   private final UserService userService;
 
   @PostMapping("/create")
-  public ResponseEntity<?> create(@RequestBody CreateUserRequest request) {
+  public ResponseEntity<?> create(@Valid @RequestBody CreateUserRequest request) {
     userService.create(request);
     return ResponseEntity.ok().build();
   }
 
   @PostMapping("/login")
-  public ResponseEntity<?> login(@RequestBody LoginRequest request) {
+  public ResponseEntity<?> login(@Valid @RequestBody LoginRequest request) {
     try {
       authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword()));
     } catch (AuthenticationException e) {
@@ -58,7 +59,7 @@ public class UserController {
 
   @NeedLogin
   @PostMapping("/charge-point")
-  public ResponseEntity<?> chargePoint(@RequestBody ChargePointRequest request,
+  public ResponseEntity<?> chargePoint(@Valid @RequestBody ChargePointRequest request,
                                         @AuthenticationPrincipal ConcertlyUserDetail userDetails){
     UUID requesterId = userDetails.getUser().getId();
     userService.chargePoint(request, requesterId);

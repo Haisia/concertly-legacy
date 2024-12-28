@@ -7,6 +7,7 @@ import com.concertly.concertly_legacy.web.reservation.dto.CancelReservationReque
 import com.concertly.concertly_legacy.web.reservation.dto.FetchOwnReservationResponse;
 import com.concertly.concertly_legacy.web.reservation.dto.ReservationConcertResponse;
 import com.concertly.concertly_legacy.web.reservation.dto.ReserveConcertRequest;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -27,16 +28,16 @@ public class ReservationController {
 
   @NeedLogin
   @PostMapping("/reserve-concert")
-  public ResponseEntity<ReservationConcertResponse> reserveConcert(@RequestBody ReserveConcertRequest request,
-                                                                   @AuthenticationPrincipal ConcertlyUserDetail userDetail) {
+  public ResponseEntity<ReservationConcertResponse> reserveConcert(@Valid @RequestBody ReserveConcertRequest request,
+                                                                    @AuthenticationPrincipal ConcertlyUserDetail userDetail) {
     UUID requesterId = userDetail.getUser().getId();
     return ResponseEntity.ok().body(reservationService.concertReservation(request, requesterId));
   }
 
   @NeedLogin
   @PostMapping("/cancel")
-  public ResponseEntity<?> cancelReservation(@RequestBody CancelReservationRequest request,
-                                @AuthenticationPrincipal ConcertlyUserDetail userDetail){
+  public ResponseEntity<?> cancelReservation(@Valid @RequestBody CancelReservationRequest request,
+                                             @AuthenticationPrincipal ConcertlyUserDetail userDetail){
     UUID requesterId = userDetail.getUser().getId();
     reservationService.cancelReservation(request, requesterId);
     return ResponseEntity.ok().build();
