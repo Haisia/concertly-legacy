@@ -4,6 +4,7 @@ import com.concertly.concertly_legacy.commons.annotations.NeedLogin;
 import com.concertly.concertly_legacy.config.jwt.ConcertlyUserDetail;
 import com.concertly.concertly_legacy.domain.concert.service.ConcertService;
 import com.concertly.concertly_legacy.web.concert.dto.*;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
 import java.util.UUID;
 
 @RequiredArgsConstructor
@@ -23,7 +25,7 @@ public class ConcertController {
 
   @NeedLogin
   @PostMapping("/create")
-  public ResponseEntity<?> create(@RequestBody CreateConcertRequest request,
+  public ResponseEntity<?> create(@Valid @RequestBody CreateConcertRequest request,
                                   @AuthenticationPrincipal ConcertlyUserDetail userDetail) {
     UUID requesterId = userDetail.getUser().getId();
     concertService.create(request, requesterId);
@@ -32,7 +34,7 @@ public class ConcertController {
 
   @NeedLogin
   @PostMapping("/write-comment")
-  public ResponseEntity<?> writeComment(@RequestBody CreateConcertCommentRequest request,
+  public ResponseEntity<?> writeComment(@Valid @RequestBody CreateConcertCommentRequest request,
                                         @AuthenticationPrincipal ConcertlyUserDetail userDetail) {
     UUID requesterId = userDetail.getUser().getId();
     concertService.createComment(request, requesterId);
@@ -41,7 +43,7 @@ public class ConcertController {
 
   @NeedLogin
   @PostMapping("/delete-comment")
-  public ResponseEntity<?> deleteComment(@RequestBody DeleteConcertCommentRequest request,
+  public ResponseEntity<?> deleteComment(@Valid @RequestBody DeleteConcertCommentRequest request,
                                         @AuthenticationPrincipal ConcertlyUserDetail userDetail) {
     UUID requesterId = userDetail.getUser().getId();
     concertService.deleteComment(request, requesterId);
@@ -49,8 +51,13 @@ public class ConcertController {
   }
 
   @PostMapping("/fetch-reservable-seats")
-  public ResponseEntity<FetchReservableConcertSeatsResponse> fetchReservableSeats(@RequestBody FetchReservableConcertSeatsRequest request){
+  public ResponseEntity<FetchReservableConcertSeatsResponse> fetchReservableSeats(@Valid @RequestBody FetchReservableConcertSeatsRequest request){
     return ResponseEntity.ok().body(concertService.fetchReservableSeats(request));
   }
 
+  @PostMapping("/fetch-reservable-concerts")
+  public ResponseEntity<List<FetchReservableConcertSeatsResponse>> fetchReservableConcerts() {
+    return ResponseEntity.ok().body(concertService.fetchReservableConcerts());
+
+  }
 }

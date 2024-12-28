@@ -13,6 +13,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.UUID;
 
 @Slf4j
@@ -24,7 +25,8 @@ public class ConcertServiceImpl implements ConcertService {
   private final ConcertCommentRepository concertCommentRepository;
 
   @Transactional
-  public void create(CreateConcertRequest request, UUID requesterId) {
+  @Override
+  public UUID create(CreateConcertRequest request, UUID requesterId) {
     Concert concert = Concert.builder()
       .title(request.getTitle())
       .location(request.getLocation())
@@ -34,25 +36,31 @@ public class ConcertServiceImpl implements ConcertService {
 
     for (CreateConcertRequest.Seats seat : request.getSeatList()) {
       for (int i = 1; i <= seat.seatMaxLineNumber; i++) {
-        String seatNumber =  seat.getSeatLabel().toUpperCase() + i;
+        String seatNumber = seat.getSeatLabel().toUpperCase() + i;
         concert.createSeat(seatNumber, seat.getPrice());
       }
     }
 
-    concertRepository.save(concert);
+    Concert savedConcert = concertRepository.save(concert);
     log.info("{}님이 {} 콘서트와 좌석을 생성하였습니다.", requesterId, concert.getId());
+
+    return savedConcert.getId();
   }
 
   @Transactional
-  public void createComment(CreateConcertCommentRequest request, UUID requesterId) {
+  @Override
+  public UUID createComment(CreateConcertCommentRequest request, UUID requesterId) {
     Concert concert = concertRepository.findById(request.getConcertId())
       .orElseThrow(() -> new NotFoundException("Concert", "id", request.getConcertId().toString()));
 
     ConcertComment comment = concert.createComment(request.getComment());
+    concertCommentRepository.save(comment);
     log.info("{} 님이 {} 에 {} 댓글을 달았습니다.", requesterId, request.getConcertId(), comment.getId());
+    return comment.getId();
   }
 
   @Transactional
+  @Override
   public void deleteComment(DeleteConcertCommentRequest request, UUID requesterId) {
     ConcertComment concertComment = concertCommentRepository.findById(request.getCommentId())
       .orElseThrow(() -> new NotFoundException("ConcertComment", "id", request.getCommentId().toString()));
@@ -65,10 +73,22 @@ public class ConcertServiceImpl implements ConcertService {
   }
 
   @Transactional
+  @Override
   public FetchReservableConcertSeatsResponse fetchReservableSeats(FetchReservableConcertSeatsRequest request) {
     Concert concert = concertRepository.findById(request.getConcertId())
       .orElseThrow(() -> new NotFoundException("Concert", "id", request.getConcertId().toString()));
 
     return ConcertApiMapper.toFetchReservableConcertSeatsResponse(concert);
+  }
+
+  @Transactional
+  @Override
+  public List<FetchReservableConcertSeatsResponse> fetchReservableConcerts() {
+    return concertRepository.findAll()
+      .stream()
+      .filter(Concert::isReservationAvailable)
+      .map(ConcertApiMapper::toFetchReservableConcertSeatsResponse)
+      .toList()
+      ;
   }
 }

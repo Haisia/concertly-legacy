@@ -23,6 +23,13 @@ spring:
     password: ${CONCERTLY_DATABASE_PASSWORD}
     driver-class-name: org.mariadb.jdbc.Driver
 
+springdoc:
+  api-docs:
+    path: /v3/api-docs
+  swagger-ui:
+    path: /swagger-ui.html
+    use-root-path: true
+
 logging:
   level:
     org.hibernate:

@@ -29,11 +29,15 @@ public class Reservation extends BaseEntity {
   private User user;
 
   public static Reservation reserve(Seat seat, User user) {
+    if (seat.getConcert().getStartTime().isBefore(LocalDateTime.now().plusHours(24))) {
+      throw new UnableStatusException("예약은 공연 시작 24시간 이전까지만 가능합니다.");
+    }
     seat.reservation();
     user.spendPoints(seat.getPrice());
-    return new Reservation(seat, user);
+    Reservation reservation = new Reservation(seat, user);
+    user.getReservationList().add(reservation);
+    return reservation;
   }
-
   public void cancel() {
     if (!this.deleted.equals("N")) {
       throw new UnableStatusException("이미 취소된 예약입니다.");

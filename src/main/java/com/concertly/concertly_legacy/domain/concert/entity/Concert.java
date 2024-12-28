@@ -4,10 +4,7 @@ import com.concertly.concertly_legacy.commons.entity.BaseEntity;
 import com.concertly.concertly_legacy.commons.exceptions.AlreadyExistException;
 import com.concertly.concertly_legacy.commons.exceptions.NotFoundException;
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.hibernate.annotations.Where;
 
 import java.time.LocalDateTime;
@@ -27,6 +24,7 @@ public class Concert extends BaseEntity {
   @Column(name = "location", nullable = false)
   private String location;
 
+  @Setter
   @Column(name = "start_time", nullable = false)
   private LocalDateTime startTime;
 
@@ -86,5 +84,9 @@ public class Concert extends BaseEntity {
       .filter(Seat::isAvailable)
       .toList()
       ;
+  }
+
+  public boolean isReservationAvailable() {
+    return this.startTime.isAfter(LocalDateTime.now().plusHours(24)) && !findAvailableSeatList().isEmpty();
   }
 }
