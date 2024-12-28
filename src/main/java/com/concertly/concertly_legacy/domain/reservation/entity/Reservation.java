@@ -10,6 +10,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.Where;
 
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Getter
@@ -38,6 +39,10 @@ public class Reservation extends BaseEntity {
       throw new UnableStatusException("이미 취소된 예약입니다.");
     }
 
+    if (isLessThan24HoursToStart()) {
+      throw new UnableStatusException("예약 취소는 공연 시작 24시간 전까지만 가능합니다.");
+    }
+
     Long price = seat.cancel().getPrice();
     user.chargePoints(price);
     this.deleted = "Y";
@@ -45,6 +50,12 @@ public class Reservation extends BaseEntity {
 
   public boolean isOwner(UUID userId) {
     return user.getId().equals(userId);
+  }
+
+  public boolean isLessThan24HoursToStart() {
+    return LocalDateTime.now()
+      .plusHours(24)
+      .isAfter(this.seat.getConcert().getStartTime());
   }
 
   private Reservation(Seat seat, User user) {
