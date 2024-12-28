@@ -69,6 +69,6 @@ create table if not exists reservation
   created_by  varchar(255) null,
   updated_at  datetime(6) null,
   updated_by  varchar(255) null,
-  constraint fk_reservation_seat_id foreign key (seat_id) references concerts (id),
+  constraint fk_reservation_seat_id foreign key (seat_id) references seats (id),
   constraint fk_reservation_user_id foreign key (user_id) references users (id)
 ) comment '콘서트 예약 테이블';
