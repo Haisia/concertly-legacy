@@ -85,4 +85,8 @@ public class Concert extends BaseEntity {
       .toList()
       ;
   }
+
+  public boolean isReservationAvailable() {
+    return this.startTime.isAfter(LocalDateTime.now().plusHours(24)) && !findAvailableSeatList().isEmpty();
+  }
 }

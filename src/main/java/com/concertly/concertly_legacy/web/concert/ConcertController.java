@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
 import java.util.UUID;
 
 @RequiredArgsConstructor
@@ -54,4 +55,9 @@ public class ConcertController {
     return ResponseEntity.ok().body(concertService.fetchReservableSeats(request));
   }
 
+  @PostMapping("/fetch-reservable-concerts")
+  public ResponseEntity<List<FetchReservableConcertSeatsResponse>> fetchReservableConcerts() {
+    return ResponseEntity.ok().body(concertService.fetchReservableConcerts());
+
+  }
 }

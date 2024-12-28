@@ -13,8 +13,8 @@ public class ConcertSamples {
     CreateConcertRequest request = new CreateConcertRequest();
     request.setTitle(CONCERT_TITLE_SCHEMA_EXAMPLE);
     request.setLocation(CONCERT_LOCATION_SCHEMA_EXAMPLE);
-    request.setStartTime(LocalDateTime.parse(CONCERT_START_TIME_SCHEMA_EXAMPLE));
-    request.setEndTime(LocalDateTime.parse(CONCERT_END_TIME_SCHEMA_EXAMPLE));
+    request.setStartTime(LocalDateTime.now().plusYears(10));
+    request.setEndTime(request.getStartTime().plusHours(2));
 
     CreateConcertRequest.Seats seats1 = new CreateConcertRequest.Seats("A", 10L, 1000L);
     CreateConcertRequest.Seats seats2 = new CreateConcertRequest.Seats("B", 20L, 2000L);
