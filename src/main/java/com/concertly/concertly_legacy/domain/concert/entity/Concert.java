@@ -8,6 +8,7 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.BatchSize;
 import org.hibernate.annotations.Where;
 
 import java.time.LocalDateTime;
@@ -36,6 +37,9 @@ public class Concert extends BaseEntity {
   @OneToMany(mappedBy = "concert", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
   private final List<Seat> seatList = new ArrayList<>();
 
+  @OneToMany(mappedBy = "concert", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+  private final List<ConcertComment> commentList = new ArrayList<>();
+
   @Builder
   private Concert(String title, String location, LocalDateTime startTime, LocalDateTime endTime) {
     this.title = title;
@@ -58,6 +62,12 @@ public class Concert extends BaseEntity {
     Seat seat = new Seat(seatNumber, price, this);
     this.seatList.add(seat);
     return seat;
+  }
+
+  public ConcertComment createComment(String comment) {
+    ConcertComment concertComment = new ConcertComment(comment, this);
+    this.commentList.add(concertComment);
+    return concertComment;
   }
 
   public List<Seat> getAllSeatList() {

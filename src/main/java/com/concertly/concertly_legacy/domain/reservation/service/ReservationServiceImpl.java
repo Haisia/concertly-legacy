@@ -14,6 +14,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.UUID;
+
 @RequiredArgsConstructor
 @Service
 public class ReservationServiceImpl implements ReservationService {
@@ -24,7 +26,7 @@ public class ReservationServiceImpl implements ReservationService {
 
   @Transactional
   @Override
-  public void concertReservation(ConcertReservationRequest request, Long requesterId) {
+  public void concertReservation(ConcertReservationRequest request, UUID requesterId) {
     Concert concert = concertRepository.findWithSeatsById(request.getConcertId())
       .orElseThrow(() -> new NotFoundException("Concert", "concertId", request.getConcertId().toString()));
 
