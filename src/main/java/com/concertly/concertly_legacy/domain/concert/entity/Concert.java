@@ -8,7 +8,6 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.BatchSize;
 import org.hibernate.annotations.Where;
 
 import java.time.LocalDateTime;
@@ -79,6 +78,13 @@ public class Concert extends BaseEntity {
       .filter(seat -> seat.getSeatNumber().equals(seatNumber))
       .findFirst()
       .orElseThrow(() -> new NotFoundException("Seat", "seatNumber", seatNumber))
+      ;
+  }
+
+  public List<Seat> findAvailableSeatList() {
+    return this.seatList.stream()
+      .filter(Seat::isAvailable)
+      .toList()
       ;
   }
 }

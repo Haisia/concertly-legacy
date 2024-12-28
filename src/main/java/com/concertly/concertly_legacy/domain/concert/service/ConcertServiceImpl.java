@@ -6,9 +6,8 @@ import com.concertly.concertly_legacy.domain.concert.entity.Concert;
 import com.concertly.concertly_legacy.domain.concert.entity.ConcertComment;
 import com.concertly.concertly_legacy.domain.concert.repository.ConcertCommentRepository;
 import com.concertly.concertly_legacy.domain.concert.repository.ConcertRepository;
-import com.concertly.concertly_legacy.web.concert.dto.CreateConcertCommentRequest;
-import com.concertly.concertly_legacy.web.concert.dto.CreateConcertRequest;
-import com.concertly.concertly_legacy.web.concert.dto.DeleteConcertCommentRequest;
+import com.concertly.concertly_legacy.web.concert.ConcertApiMapper;
+import com.concertly.concertly_legacy.web.concert.dto.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -65,4 +64,11 @@ public class ConcertServiceImpl implements ConcertService {
     log.info("{} 님이 {} 댓글을 삭제하였습니다.", requesterId, request.getCommentId());
   }
 
+  @Transactional
+  public FetchReservableConcertSeatsResponse fetchReservableSeats(FetchReservableConcertSeatsRequest request) {
+    Concert concert = concertRepository.findById(request.getConcertId())
+      .orElseThrow(() -> new NotFoundException("Concert", "id", request.getConcertId().toString()));
+
+    return ConcertApiMapper.toFetchReservableConcertSeatsResponse(concert);
+  }
 }

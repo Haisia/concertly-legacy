@@ -3,9 +3,7 @@ package com.concertly.concertly_legacy.web.concert;
 import com.concertly.concertly_legacy.commons.annotations.NeedLogin;
 import com.concertly.concertly_legacy.config.jwt.ConcertlyUserDetail;
 import com.concertly.concertly_legacy.domain.concert.service.ConcertService;
-import com.concertly.concertly_legacy.web.concert.dto.CreateConcertCommentRequest;
-import com.concertly.concertly_legacy.web.concert.dto.CreateConcertRequest;
-import com.concertly.concertly_legacy.web.concert.dto.DeleteConcertCommentRequest;
+import com.concertly.concertly_legacy.web.concert.dto.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -48,6 +46,11 @@ public class ConcertController {
     UUID requesterId = userDetail.getUser().getId();
     concertService.deleteComment(request, requesterId);
     return ResponseEntity.ok().build();
+  }
+
+  @PostMapping("/fetch-reservable-seats")
+  public ResponseEntity<FetchReservableConcertSeatsResponse> fetchReservableSeats(@RequestBody FetchReservableConcertSeatsRequest request){
+    return ResponseEntity.ok().body(concertService.fetchReservableSeats(request));
   }
 
 }
