@@ -27,7 +27,6 @@ import java.util.Optional;
 import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.*;
 
 @SpringBootTest
 @ActiveProfiles("test")
@@ -42,7 +41,7 @@ public class IntegrationUserTest {
   @Autowired private ReservationService reservationService;
 
   @Test
-  public void 사용자는_회원가입이_가능해야_한다() throws Exception{
+  public void 사용자는_회원가입이_가능해야_한다() {
     //given
     CreateUserRequest request = UserSamples.createUserRequest();
 
@@ -54,7 +53,7 @@ public class IntegrationUserTest {
   }
 
   @Test
-  public void 회원은_포인트를_충정할_수_있어야_한다() throws Exception{
+  public void 회원은_포인트를_충정할_수_있어야_한다() {
     //given
     User user = createUser();
     //when & then
