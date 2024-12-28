@@ -2,7 +2,9 @@ package com.concertly.concertly_legacy.web.reservation.dto;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.Pattern;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.util.UUID;
 
@@ -10,6 +12,7 @@ import static com.concertly.concertly_legacy.commons.constants.DtoMetadataConsta
 import static com.concertly.concertly_legacy.commons.constants.DtoMetadataConstants.ID_PATTERN_MESSAGE;
 
 @Schema(description = "콘서트 예약 요청 Dto")
+@AllArgsConstructor @NoArgsConstructor
 @Data
 public class ReserveConcertRequest {
 

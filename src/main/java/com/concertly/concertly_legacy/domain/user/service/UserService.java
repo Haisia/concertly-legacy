@@ -7,7 +7,7 @@ import java.util.UUID;
 
 public interface UserService {
 
-  void create(CreateUserRequest request);
+  String create(CreateUserRequest request);
 
   void chargePoint(ChargePointRequest request, UUID requesterId);
 }

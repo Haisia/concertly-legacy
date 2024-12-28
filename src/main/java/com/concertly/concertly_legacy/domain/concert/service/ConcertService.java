@@ -6,9 +6,9 @@ import java.util.UUID;
 
 public interface ConcertService {
 
-  void create(CreateConcertRequest request, UUID requesterId);
+  UUID create(CreateConcertRequest request, UUID requesterId);
 
-  void createComment(CreateConcertCommentRequest request, UUID requesterId);
+  UUID createComment(CreateConcertCommentRequest request, UUID requesterId);
 
   void deleteComment(DeleteConcertCommentRequest request, UUID requesterId);
 

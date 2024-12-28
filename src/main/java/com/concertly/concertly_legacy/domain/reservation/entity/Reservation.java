@@ -31,9 +31,10 @@ public class Reservation extends BaseEntity {
   public static Reservation reserve(Seat seat, User user) {
     seat.reservation();
     user.spendPoints(seat.getPrice());
-    return new Reservation(seat, user);
+    Reservation reservation = new Reservation(seat, user);
+    user.getReservationList().add(reservation);
+    return reservation;
   }
-
   public void cancel() {
     if (!this.deleted.equals("N")) {
       throw new UnableStatusException("이미 취소된 예약입니다.");

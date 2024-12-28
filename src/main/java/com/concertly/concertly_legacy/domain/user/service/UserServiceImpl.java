@@ -23,9 +23,12 @@ public class UserServiceImpl implements UserService{
 
   @Transactional
   @Override
-  public void create(CreateUserRequest request) {
+  public String create(CreateUserRequest request) {
     User user = User.of(request.getEmail(), passwordEncoder.encode(request.getPassword()));
-    userRepository.save(user);
+    User createdUser = userRepository.save(user);
+    log.info("{} 유저가 회원가입했습니다.", createdUser.getEmail());
+
+    return createdUser.getEmail();
   }
 
   @Transactional

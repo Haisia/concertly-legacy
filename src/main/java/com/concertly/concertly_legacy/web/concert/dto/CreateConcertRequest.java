@@ -3,13 +3,14 @@ package com.concertly.concertly_legacy.web.concert.dto;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.Pattern;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
 import static com.concertly.concertly_legacy.commons.constants.DtoMetadataConstants.*;
-import static com.concertly.concertly_legacy.commons.constants.DtoMetadataConstants.ID_PATTERN_MESSAGE;
 
 @Schema(description = "콘서트 생성 요청 Dto")
 @Data
@@ -34,6 +35,7 @@ public class CreateConcertRequest {
   @Schema(description = "콘서트 좌석 리스트 정보.")
   public List<Seats> seatList;
 
+  @AllArgsConstructor @NoArgsConstructor
   @Data
   public static class Seats {
 
