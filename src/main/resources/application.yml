@@ -1,5 +1,5 @@
 server:
-  port: 8080
+  port: 8081
 spring:
   application:
     name: concertly
@@ -7,12 +7,28 @@ spring:
     database-platform: org.hibernate.dialect.MariaDBDialect
     hibernate:
       ddl-auto: create-drop
-    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+        highlight_sql: true
+        use_sql_comments: true
+        jdbc:
+          batch_size: 500
+        order_inserts: true
+        order_updates: true
+        default_batch_fetch_size: 500
   datasource:
-    url: jdbc:mariadb://localhost:11111/concertly
+    url: jdbc:mariadb://localhost:11111/concertly?rewriteBatchedStatements=true
     username: ${CONCERTLY_DATABASE_USERNAME}
     password: ${CONCERTLY_DATABASE_PASSWORD}
     driver-class-name: org.mariadb.jdbc.Driver
+
+logging:
+  level:
+    org.hibernate:
+      orm.jdbc.bind: trace
+      SQL: debug
+      type.descriptor.sql: trace
 
 value:
   jwt:
