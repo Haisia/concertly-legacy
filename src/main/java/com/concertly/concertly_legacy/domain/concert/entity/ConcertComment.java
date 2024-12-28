@@ -5,10 +5,12 @@ import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@SQLDelete(sql = "UPDATE concert_comments SET deleted = 'Y' WHERE id = ?")
 @Where(clause = "deleted = 'N'")
 @Table(name = "concert_comments")
 @Entity

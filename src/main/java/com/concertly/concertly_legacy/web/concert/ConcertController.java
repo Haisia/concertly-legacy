@@ -5,6 +5,7 @@ import com.concertly.concertly_legacy.config.jwt.ConcertlyUserDetail;
 import com.concertly.concertly_legacy.domain.concert.service.ConcertService;
 import com.concertly.concertly_legacy.web.concert.dto.CreateConcertCommentRequest;
 import com.concertly.concertly_legacy.web.concert.dto.CreateConcertRequest;
+import com.concertly.concertly_legacy.web.concert.dto.DeleteConcertCommentRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -37,6 +38,15 @@ public class ConcertController {
                                         @AuthenticationPrincipal ConcertlyUserDetail userDetail) {
     UUID requesterId = userDetail.getUser().getId();
     concertService.createComment(request, requesterId);
+    return ResponseEntity.ok().build();
+  }
+
+  @NeedLogin
+  @PostMapping("/delete-comment")
+  public ResponseEntity<?> deleteComment(@RequestBody DeleteConcertCommentRequest request,
+                                        @AuthenticationPrincipal ConcertlyUserDetail userDetail) {
+    UUID requesterId = userDetail.getUser().getId();
+    concertService.deleteComment(request, requesterId);
     return ResponseEntity.ok().build();
   }
 

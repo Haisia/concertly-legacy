@@ -1,11 +1,14 @@
 package com.concertly.concertly_legacy.domain.concert.service;
 
 import com.concertly.concertly_legacy.commons.exceptions.NotFoundException;
+import com.concertly.concertly_legacy.commons.exceptions.PermissionDeniedException;
 import com.concertly.concertly_legacy.domain.concert.entity.Concert;
 import com.concertly.concertly_legacy.domain.concert.entity.ConcertComment;
+import com.concertly.concertly_legacy.domain.concert.repository.ConcertCommentRepository;
 import com.concertly.concertly_legacy.domain.concert.repository.ConcertRepository;
 import com.concertly.concertly_legacy.web.concert.dto.CreateConcertCommentRequest;
 import com.concertly.concertly_legacy.web.concert.dto.CreateConcertRequest;
+import com.concertly.concertly_legacy.web.concert.dto.DeleteConcertCommentRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -19,6 +22,7 @@ import java.util.UUID;
 public class ConcertServiceImpl implements ConcertService {
 
   private final ConcertRepository concertRepository;
+  private final ConcertCommentRepository concertCommentRepository;
 
   @Transactional
   public void create(CreateConcertRequest request, UUID requesterId) {
@@ -48,5 +52,19 @@ public class ConcertServiceImpl implements ConcertService {
     ConcertComment comment = concert.createComment(request.getComment());
     log.info("{} 님이 {} 에 {} 댓글을 달았습니다.", requesterId, request.getConcertId(), comment.getId());
   }
+
+  @Transactional
+  public void deleteComment(DeleteConcertCommentRequest request, UUID requesterId) {
+    ConcertComment concertComment = concertCommentRepository.findById(request.getCommentId())
+      .orElseThrow(() -> new NotFoundException("ConcertComment", "id", request.getCommentId().toString()));
+    if (!concertComment.getCreatedBy().equals(requesterId.toString())) {
+      throw new PermissionDeniedException();
+    }
+
+    concertCommentRepository.deleteById(request.getCommentId());
+    log.info("{} 님이 {} 댓글을 삭제하였습니다.", requesterId, request.getCommentId());
+  }
+
+
 
 }
