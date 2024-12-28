@@ -9,7 +9,7 @@ import com.concertly.concertly_legacy.domain.reservation.entity.Reservation;
 import com.concertly.concertly_legacy.domain.reservation.repository.ReservationRepository;
 import com.concertly.concertly_legacy.domain.user.entity.User;
 import com.concertly.concertly_legacy.domain.user.repository.UserRepository;
-import com.concertly.concertly_legacy.web.reservation.dto.ConcertReservationRequest;
+import com.concertly.concertly_legacy.web.reservation.dto.ReserveConcertRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -26,7 +26,7 @@ public class ReservationServiceImpl implements ReservationService {
 
   @Transactional
   @Override
-  public void concertReservation(ConcertReservationRequest request, UUID requesterId) {
+  public void concertReservation(ReserveConcertRequest request, UUID requesterId) {
     Concert concert = concertRepository.findWithSeatsById(request.getConcertId())
       .orElseThrow(() -> new NotFoundException("Concert", "concertId", request.getConcertId().toString()));
 
@@ -41,6 +41,5 @@ public class ReservationServiceImpl implements ReservationService {
     Reservation reservation = Reservation.reserve(foundSeat, user);
     reservationRepository.save(reservation);
   }
-
 
 }

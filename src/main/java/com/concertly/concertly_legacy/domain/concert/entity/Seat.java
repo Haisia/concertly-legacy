@@ -7,7 +7,6 @@ import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.BatchSize;
 import org.hibernate.annotations.Where;
 
 @Getter
@@ -24,6 +23,7 @@ public class Seat extends BaseEntity {
   @Column(name = "seat_number", nullable = false)
   private String seatNumber;
 
+  @Enumerated(EnumType.STRING)
   @Column(name = "status", nullable = false)
   private SeatStatus status;
 

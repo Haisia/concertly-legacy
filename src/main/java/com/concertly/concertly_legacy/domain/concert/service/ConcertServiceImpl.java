@@ -65,6 +65,4 @@ public class ConcertServiceImpl implements ConcertService {
     log.info("{} 님이 {} 댓글을 삭제하였습니다.", requesterId, request.getCommentId());
   }
 
-
-
 }

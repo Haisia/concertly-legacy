@@ -23,7 +23,7 @@ public class Point {
 
   public Point subtract(Long point) {
     if (this.point < point) {
-      throw new InvalidParameterException(String.format("보유 포인트 %d가 차감될 포인트 %d보다 적습니다.", point, this.point));
+      throw new InvalidParameterException(String.format("보유 포인트 %d가 차감될 포인트 %d보다 적습니다.", this.point, point));
     }
     return new Point(this.point - point);
   }

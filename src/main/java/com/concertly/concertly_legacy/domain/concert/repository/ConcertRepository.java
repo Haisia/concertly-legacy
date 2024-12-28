@@ -13,6 +13,6 @@ import java.util.UUID;
 public interface ConcertRepository extends JpaRepository<Concert, UUID> {
 
   @Query("SELECT c FROM Concert c LEFT JOIN FETCH c.seatList WHERE c.id = :concertId")
-  Optional<Concert> findWithSeatsById(@Param("concertId") Long concertId);
+  Optional<Concert> findWithSeatsById(@Param("concertId") UUID concertId);
 
 }

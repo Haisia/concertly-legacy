@@ -1,6 +1,6 @@
 package com.concertly.concertly_legacy.domain.reservation.service;
 
-import com.concertly.concertly_legacy.web.reservation.dto.ConcertReservationRequest;
+import com.concertly.concertly_legacy.web.reservation.dto.ReserveConcertRequest;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
@@ -13,7 +13,7 @@ public class IReservationServiceImplTest {
   @Test
   public void i_concertReservation_success() throws Exception{
     //given
-    ConcertReservationRequest concertReservationRequest = new ConcertReservationRequest();
+    ReserveConcertRequest reserveConcertRequest = new ReserveConcertRequest();
 
 
     //when

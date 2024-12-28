@@ -33,7 +33,7 @@ create table if not exists seats
   id            uuid           not null  comment 'pk' primary key,
   concert_id    uuid           not null comment '콘서트 pk',
   seat_number   varchar(255)  not null comment '좌석 번호 ex) a1, a2, ... , e1, e2, ...',
-  status        enum('AVAILABLE', 'RESERVED')   not null default 'AVAILABLE' comment '좌석 상태 ex) AVAILABLE, RESERVED',
+  status        varchar(255)   not null default 'AVAILABLE' comment '좌석 상태 ex) AVAILABLE, RESERVED',
   price         BIGINT        not null comment '좌석 가격',
 
   deleted     varchar(1) not null default 'N',
