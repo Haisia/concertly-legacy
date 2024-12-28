@@ -1,8 +1,11 @@
 package com.concertly.concertly_legacy.web.user;
 
+import com.concertly.concertly_legacy.commons.annotations.NeedLogin;
+import com.concertly.concertly_legacy.config.jwt.ConcertlyUserDetail;
 import com.concertly.concertly_legacy.config.jwt.JwtUtil;
 import com.concertly.concertly_legacy.commons.exceptions.LoginFailException;
 import com.concertly.concertly_legacy.domain.user.service.UserService;
+import com.concertly.concertly_legacy.web.user.dto.ChargePointRequest;
 import com.concertly.concertly_legacy.web.user.dto.CreateUserRequest;
 import com.concertly.concertly_legacy.web.user.dto.LoginRequest;
 import com.concertly.concertly_legacy.web.user.dto.LoginResponse;
@@ -12,12 +15,15 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.UUID;
 
 @RequiredArgsConstructor
 @RequestMapping("/api/user")
@@ -48,6 +54,15 @@ public class UserController {
 
     String generatedToken = jwtUtil.generateToken(userDetails.getUsername());
     return ResponseEntity.status(HttpStatus.OK).body(new LoginResponse(generatedToken));
+  }
+
+  @NeedLogin
+  @PostMapping("/charge-point")
+  public ResponseEntity<?> chargePoint(@RequestBody ChargePointRequest request,
+                                        @AuthenticationPrincipal ConcertlyUserDetail userDetails){
+    UUID requesterId = userDetails.getUser().getId();
+    userService.chargePoint(request, requesterId);
+    return ResponseEntity.ok().build();
   }
 
 }
