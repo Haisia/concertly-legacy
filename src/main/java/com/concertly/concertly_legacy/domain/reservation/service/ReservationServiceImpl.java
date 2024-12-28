@@ -10,7 +10,9 @@ import com.concertly.concertly_legacy.domain.reservation.entity.Reservation;
 import com.concertly.concertly_legacy.domain.reservation.repository.ReservationRepository;
 import com.concertly.concertly_legacy.domain.user.entity.User;
 import com.concertly.concertly_legacy.domain.user.repository.UserRepository;
+import com.concertly.concertly_legacy.web.reservation.ReservationApiMapper;
 import com.concertly.concertly_legacy.web.reservation.dto.CancelReservationRequest;
+import com.concertly.concertly_legacy.web.reservation.dto.FetchOwnReservationResponse;
 import com.concertly.concertly_legacy.web.reservation.dto.ReservationConcertResponse;
 import com.concertly.concertly_legacy.web.reservation.dto.ReserveConcertRequest;
 import lombok.RequiredArgsConstructor;
@@ -18,6 +20,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.UUID;
 
 @Slf4j
@@ -60,6 +63,14 @@ public class ReservationServiceImpl implements ReservationService {
 
     reservation.cancel();
     log.info("{} 님이 {} 예약을 취소했습니다.", requesterId, request.getReservationId());
+  }
+
+  @Transactional
+  @Override
+  public List<FetchOwnReservationResponse> fetchOwns(UUID requesterId) {
+    User user = userRepository.findById(requesterId)
+      .orElseThrow(() -> new NotFoundException("User", "id", requesterId.toString()));
+    return ReservationApiMapper.toFetchOwnReservationResponse(user.ownReservations());
   }
 
 }

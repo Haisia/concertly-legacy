@@ -1,5 +1,6 @@
 package com.concertly.concertly_legacy.web.reservation;
 
+import com.concertly.concertly_legacy.commons.annotations.NeedLogin;
 import com.concertly.concertly_legacy.config.jwt.ConcertlyUserDetail;
 import com.concertly.concertly_legacy.domain.reservation.service.ReservationService;
 import com.concertly.concertly_legacy.web.reservation.dto.CancelReservationRequest;
@@ -22,6 +23,7 @@ public class ReservationController {
 
   private final ReservationService reservationService;
 
+  @NeedLogin
   @PostMapping("/reserve-concert")
   public ResponseEntity<ReservationConcertResponse> reserveConcert(@RequestBody ReserveConcertRequest request,
                                                                    @AuthenticationPrincipal ConcertlyUserDetail userDetail) {
@@ -29,11 +31,20 @@ public class ReservationController {
     return ResponseEntity.ok().body(reservationService.concertReservation(request, requesterId));
   }
 
+  @NeedLogin
   @PostMapping("/cancel")
-  public void cancelReservation(@RequestBody CancelReservationRequest request,
+  public ResponseEntity<?> cancelReservation(@RequestBody CancelReservationRequest request,
                                 @AuthenticationPrincipal ConcertlyUserDetail userDetail){
     UUID requesterId = userDetail.getUser().getId();
     reservationService.cancelReservation(request, requesterId);
+    return ResponseEntity.ok().build();
+  }
+
+  @NeedLogin
+  @PostMapping("/fetch-owns")
+  public ResponseEntity<?> fetchReservations(@AuthenticationPrincipal ConcertlyUserDetail userDetail){
+    UUID requesterId = userDetail.getUser().getId();
+    return ResponseEntity.ok().body(reservationService.fetchOwns(requesterId));
   }
 
 }

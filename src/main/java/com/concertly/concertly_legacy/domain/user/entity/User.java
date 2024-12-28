@@ -57,6 +57,10 @@ public class User extends BaseEntity {
     return this.point.getPoint();
   }
 
+  public List<Reservation> ownReservations() {
+    return reservationList;
+  }
+
   public static User of(String email, String password) {
     return new User(email, password);
   }
