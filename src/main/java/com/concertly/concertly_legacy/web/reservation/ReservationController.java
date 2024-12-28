@@ -4,6 +4,7 @@ import com.concertly.concertly_legacy.commons.annotations.NeedLogin;
 import com.concertly.concertly_legacy.config.jwt.ConcertlyUserDetail;
 import com.concertly.concertly_legacy.domain.reservation.service.ReservationService;
 import com.concertly.concertly_legacy.web.reservation.dto.CancelReservationRequest;
+import com.concertly.concertly_legacy.web.reservation.dto.FetchOwnReservationResponse;
 import com.concertly.concertly_legacy.web.reservation.dto.ReservationConcertResponse;
 import com.concertly.concertly_legacy.web.reservation.dto.ReserveConcertRequest;
 import lombok.RequiredArgsConstructor;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
 import java.util.UUID;
 
 @RequiredArgsConstructor
@@ -42,7 +44,7 @@ public class ReservationController {
 
   @NeedLogin
   @PostMapping("/fetch-owns")
-  public ResponseEntity<?> fetchReservations(@AuthenticationPrincipal ConcertlyUserDetail userDetail){
+  public ResponseEntity<List<FetchOwnReservationResponse>> fetchReservations(@AuthenticationPrincipal ConcertlyUserDetail userDetail){
     UUID requesterId = userDetail.getUser().getId();
     return ResponseEntity.ok().body(reservationService.fetchOwns(requesterId));
   }
