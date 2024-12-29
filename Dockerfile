@@ -15,6 +15,9 @@ ENV JWT_SECRET_KEY=$JWT_SECRET_KEY
 # 프로젝트의 모든 내용을 복사 (Gradle 빌드에 필요한 파일 포함)
 COPY . .
 
+# gradlew 실행 권한 추가
+RUN chmod +x ./gradlew
+
 # Gradle clean 및 bootJar 실행하여 JAR 생성
 RUN ./gradlew clean bootJar
 
