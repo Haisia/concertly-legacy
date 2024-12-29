@@ -33,4 +33,5 @@ WORKDIR /app
 COPY --from=build /app/build/libs/concertly-legacy-0.0.1-SNAPSHOT.jar ./app.jar
 
 # 애플리케이션 실행
-CMD ["sh", "-c", "java -Dspring.profiles.active=prod -jar app.jar"]
+CMD ["sh", "-c", "env && sleep 300"]
+#CMD ["sh", "-c", "java -Dspring.profiles.active=prod -jar app.jar"]
