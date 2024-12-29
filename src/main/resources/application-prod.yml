@@ -1,0 +1,6 @@
+spring:
+  datasource:
+    url: jdbc:mariadb://138.2.59.59:11111/concertly?rewriteBatchedStatements=true
+    username: ${CONCERTLY_DATABASE_USERNAME}
+    password: ${CONCERTLY_DATABASE_PASSWORD}
+    driver-class-name: org.mariadb.jdbc.Driver
