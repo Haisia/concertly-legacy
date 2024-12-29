@@ -69,6 +69,7 @@ jobs:
 
             # 새로운 컨테이너 실행
             docker run -d \
-              --name concertly-app \
-              -p 80:8080 \
-              wnsgur13579/concertly:latest
+            --name concertly-app \
+            -p 80:8080 \
+            -v /home/${{ secrets.CLOUD_SERVER_USER }}/logs:/app/logs/prod \
+            wnsgur13579/concertly:latest
