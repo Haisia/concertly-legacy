@@ -4,7 +4,6 @@ public class DtoMetadataConstants {
   // === 공통 ===
   public static final String ID_SCHEMA_DESCRIPTION = "데이타 식별 값";
   public static final String ID_SCHEMA_EXAMPLE = "123e4567-e89b-12d3-a456-426614174000";
-  public static final String ID_PATTERN_REGEX = "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$";
   public static final String ID_PATTERN_MESSAGE = "ID 필드의 형식이 올바르지 않습니다.";
 
   public static final String CREATED_AT_DESCRIPTION = "유저 정보 생성 시각";
