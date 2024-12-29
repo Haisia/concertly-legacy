@@ -2,6 +2,7 @@ package com.concertly.concertly_legacy.domain.concert.entity;
 
 import com.concertly.concertly_legacy.commons.entity.BaseEntity;
 import com.concertly.concertly_legacy.commons.enums.SeatStatus;
+import com.concertly.concertly_legacy.commons.exceptions.UnableStatusException;
 import com.concertly.concertly_legacy.domain.reservation.entity.Reservation;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
@@ -51,7 +52,7 @@ public class Seat extends BaseEntity {
 
   public Seat reservation() {
     if (status != SeatStatus.AVAILABLE) {
-      throw new UnsupportedOperationException("해당 좌석은 예약할 수 없는 상태입니다.");
+      throw new UnableStatusException("해당 좌석은 예약할 수 없는 상태입니다.");
     }
     this.status = SeatStatus.RESERVED;
     return this;
@@ -59,7 +60,7 @@ public class Seat extends BaseEntity {
 
   public Seat cancel() {
     if (status != SeatStatus.RESERVED) {
-      throw new UnsupportedOperationException("예약을 취소할 수 없는 상태입니다.");
+      throw new UnableStatusException("예약을 취소할 수 없는 상태입니다.");
     }
     status = SeatStatus.AVAILABLE;
     return this;
