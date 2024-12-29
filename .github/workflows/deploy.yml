@@ -29,7 +29,7 @@ jobs:
           context: . # Dockerfile의 위치
           push: true # 푸쉬 활성화
           tags: username/repository-name:latest
-          build-args: # Docker 빌드 시 전달할 환경변수
-            CONCERTLY_DATABASE_USERNAME: ${{ secrets.CONCERTLY_DATABASE_USERNAME }}
-            CONCERTLY_DATABASE_PASSWORD: ${{ secrets.CONCERTLY_DATABASE_PASSWORD }}
-            JWT_SECRET_KEY: ${{ secrets.JWT_SECRET_KEY }}
+          build-args: |
+            CONCERTLY_DATABASE_USERNAME=${{ secrets.CONCERTLY_DATABASE_USERNAME }}
+            CONCERTLY_DATABASE_PASSWORD=${{ secrets.CONCERTLY_DATABASE_PASSWORD }}
+            JWT_SECRET_KEY=${{ secrets.JWT_SECRET_KEY }}
