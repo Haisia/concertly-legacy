@@ -10,6 +10,7 @@ public class ConcertApiMapper {
 
   public static FetchReservableConcertSeatsResponse toFetchReservableConcertSeatsResponse(Concert concert) {
     FetchReservableConcertSeatsResponse response = FetchReservableConcertSeatsResponse.builder()
+      .id(concert.getId())
       .concertName(concert.getTitle())
       .concertStartTime(concert.getStartTime())
       .concertEndTime(concert.getEndTime())

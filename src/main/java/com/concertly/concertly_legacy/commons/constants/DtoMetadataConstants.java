@@ -27,7 +27,6 @@ public class DtoMetadataConstants {
 
   public static final String USER_POINT_SCHEMA_DESCRIPTION = "유저의 보유 포인트 정보.";
   public static final String USER_POINT_SCHEMA_EXAMPLE = "1000";
-  public static final String USER_POINT_PATTERN_REGEX = "^[1-9][0-9]*$";
   public static final String USER_POINT_PATTERN_MESSAGE = "포인트 필드는 0보다 큰 정수여야 합니다.";
 
   // === 콘서트 정보 ===

@@ -17,7 +17,7 @@ import static com.concertly.concertly_legacy.commons.constants.DtoMetadataConsta
 @Data
 public class CreateConcertRequest {
 
-  @Schema(description = ID_SCHEMA_DESCRIPTION, example = CONCERT_TITLE_SCHEMA_EXAMPLE)
+  @Schema(description = CONCERT_TITLE_SCHEMA_DESCRIPTION, example = CONCERT_TITLE_SCHEMA_EXAMPLE)
   @Pattern(regexp = CONCERT_TITLE_PATTERN_REGEX, message = CONCERT_TITLE_PATTERN_MESSAGE)
   public String title;
 
