@@ -51,7 +51,7 @@ jobs:
     steps:
       # 1. SSH 연결 설정 및 클라우드 서버 명령어 실행
       - name: Deploy Docker on server
-        uses: appleboy/ssh-action@v0.1.16
+        uses: appleboy/ssh-action@v1.2.0
         with:
           host: ${{ secrets.CLOUD_SERVER_HOST }} # 클라우드 서버 IP
           username: ${{ secrets.CLOUD_SERVER_USER }} # 서버 사용자명
