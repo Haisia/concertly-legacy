@@ -57,7 +57,7 @@ jobs:
           username: ${{ secrets.CLOUD_SERVER_USER }} # 서버 사용자명
           password: ${{ secrets.CLOUD_SERVER_PASSWORD }} # (패스워드 또는 SSH Key 필요)
           port: 22
-          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
           script: |
             # 도커 이미지 Pull
             docker pull wnsgur13579/concertly:latest
