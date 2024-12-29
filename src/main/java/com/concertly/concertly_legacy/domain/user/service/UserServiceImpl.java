@@ -1,5 +1,6 @@
 package com.concertly.concertly_legacy.domain.user.service;
 
+import com.concertly.concertly_legacy.commons.exceptions.AlreadyExistException;
 import com.concertly.concertly_legacy.commons.exceptions.NotFoundException;
 import com.concertly.concertly_legacy.domain.user.entity.User;
 import com.concertly.concertly_legacy.domain.user.repository.UserRepository;
@@ -24,6 +25,10 @@ public class UserServiceImpl implements UserService{
   @Transactional
   @Override
   public String create(CreateUserRequest request) {
+    if (userRepository.existsByEmail(request.getEmail())) {
+      throw new AlreadyExistException("이미 사용 중인 이메일입니다.");
+    }
+
     User user = User.of(request.getEmail(), passwordEncoder.encode(request.getPassword()));
     User createdUser = userRepository.save(user);
     log.info("{} 유저가 회원가입했습니다.", createdUser.getEmail());
