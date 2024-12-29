@@ -70,8 +70,5 @@ jobs:
             # 새로운 컨테이너 실행
             docker run -d \
               --name concertly-app \
-              -e CONCERTLY_DATABASE_USERNAME=${{ secrets.CONCERTLY_DATABASE_USERNAME }} \
-              -e CONCERTLY_DATABASE_PASSWORD=${{ secrets.CONCERTLY_DATABASE_PASSWORD }} \
-              -e JWT_SECRET_KEY=${{ secrets.JWT_SECRET_KEY }} \
               -p 80:8080 \
               wnsgur13579/concertly:latest
