@@ -1,0 +1,34 @@
+name: Docker Build and Deploy
+
+on:
+  push:
+    branches:
+      - main # main 브랜치에 Push할 때 실행
+
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+
+    steps:
+      # 1. 코드 체크아웃
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      # 2. Docker 로그인
+      - name: Log in to DockerHub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }} # Docker Hub 사용자명
+          password: ${{ secrets.DOCKER_PASSWORD }} # Docker Hub 비밀번호
+
+      # 3. Docker 이미지 빌드 및 Push
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v5
+        with:
+          context: . # Dockerfile의 위치
+          push: true # 푸쉬 활성화
+          tags: username/repository-name:latest
+          build-args: # Docker 빌드 시 전달할 환경변수
+            CONCERTLY_DATABASE_USERNAME: ${{ secrets.CONCERTLY_DATABASE_USERNAME }}
+            CONCERTLY_DATABASE_PASSWORD: ${{ secrets.CONCERTLY_DATABASE_PASSWORD }}
+            JWT_SECRET_KEY: ${{ secrets.JWT_SECRET_KEY }}
