@@ -62,7 +62,7 @@ public class UserController {
     try {
       authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword()));
     } catch (AuthenticationException e) {
-      throw new LoginFailException(request.getEmail());
+      throw new LoginFailException("로그인에 실패했습니다.");
     }
 
     final UserDetails userDetails = userDetailsService.loadUserByUsername(request.getEmail());

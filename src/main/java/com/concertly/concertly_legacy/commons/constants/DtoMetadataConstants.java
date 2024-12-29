@@ -53,13 +53,11 @@ public class DtoMetadataConstants {
 
   public static final String CONCERT_START_TIME_SCHEMA_DESCRIPTION = "콘서트 시작 시간 정보.";
   public static final String CONCERT_START_TIME_SCHEMA_EXAMPLE = "2024-12-31T20:00:00";
-  public static final String CONCERT_START_TIME_PATTERN_REGEX = "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}$";
-  public static final String CONCERT_START_TIME_PATTERN_MESSAGE = "시작 시간은 'yyyy-MM-ddTHH:mm:ss' 형식이어야 합니다.";
+  public static final String CONCERT_START_TIME_PATTERN_MESSAGE = "시작 시간은 'yyyy-MM-ddTHH:mm:ss' 형식이며, 현재보다 미래여야 합니다.";
 
   public static final String CONCERT_END_TIME_SCHEMA_DESCRIPTION = "콘서트 종료 시간 정보.";
   public static final String CONCERT_END_TIME_SCHEMA_EXAMPLE = "2024-12-31T23:00:00";
-  public static final String CONCERT_END_TIME_PATTERN_REGEX = "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}$";
-  public static final String CONCERT_END_TIME_PATTERN_MESSAGE = "종료 시간은 'yyyy-MM-ddTHH:mm:ss' 형식이어야 합니다.";
+  public static final String CONCERT_END_TIME_PATTERN_MESSAGE = "종료 시간은 'yyyy-MM-ddTHH:mm:ss' 형식이며, 현재보다 미래여야 합니다.";
 
   public static final String CONCERT_COMMENT_SCHEMA_DESCRIPTION = "콘서트 댓글 정보.";
   public static final String CONCERT_COMMENT_SCHEMA_EXAMPLE = "굉장히 좋은 공연이었습니다!";

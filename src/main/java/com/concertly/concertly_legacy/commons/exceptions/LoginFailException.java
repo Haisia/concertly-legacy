@@ -5,7 +5,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 
 @ResponseStatus(value = HttpStatus.UNAUTHORIZED)
 public class LoginFailException extends RuntimeException {
-  public LoginFailException(String email) {
-    super(String.format("%s 유저가 로그인에 실패했습니다.", email));
+  public LoginFailException(String message) {
+    super(message);
   }
 }

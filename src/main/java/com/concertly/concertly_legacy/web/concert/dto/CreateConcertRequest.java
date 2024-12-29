@@ -1,6 +1,7 @@
 package com.concertly.concertly_legacy.web.concert.dto;
 
 import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.validation.constraints.Future;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.Pattern;
 import lombok.AllArgsConstructor;
@@ -25,11 +26,11 @@ public class CreateConcertRequest {
   public String location;
 
   @Schema(description = CONCERT_START_TIME_SCHEMA_DESCRIPTION, example = CONCERT_START_TIME_SCHEMA_EXAMPLE)
-  @Pattern(regexp = CONCERT_START_TIME_PATTERN_REGEX, message = CONCERT_START_TIME_PATTERN_MESSAGE)
+  @Future(message = CONCERT_START_TIME_PATTERN_MESSAGE)
   public LocalDateTime startTime;
 
   @Schema(description = CONCERT_END_TIME_SCHEMA_DESCRIPTION, example = CONCERT_END_TIME_SCHEMA_EXAMPLE)
-  @Pattern(regexp = CONCERT_END_TIME_PATTERN_REGEX, message = CONCERT_END_TIME_PATTERN_MESSAGE)
+  @Future(message = CONCERT_END_TIME_PATTERN_MESSAGE)
   public LocalDateTime endTime;
 
   @Schema(description = "콘서트 좌석 리스트 정보.")
