@@ -22,6 +22,16 @@ jobs:
           username: ${{ secrets.DOCKER_USERNAME }} # Docker Hub 사용자명
           password: ${{ secrets.DOCKER_PASSWORD }} # Docker Hub 비밀번호
 
+      # 환경 변수 파일 생성
+      - name: Set environment values
+        run: |
+          cd ./src/main/resources
+          touch env.properties
+          echo "CONCERTLY_DATABASE_USERNAME=${{ secrets.CONCERTLY_DATABASE_USERNAME }}" > env.properties
+          echo "CONCERTLY_DATABASE_PASSWORD=${{ secrets.CONCERTLY_DATABASE_PASSWORD }}" >> env.properties
+          echo "JWT_SECRET_KEY=${{ secrets.JWT_SECRET_KEY }}" >> env.properties
+        shell: bash
+
       # 3. Docker 이미지 빌드 및 Push
       - name: Build and push Docker image
         uses: docker/build-push-action@v5
