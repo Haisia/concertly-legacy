@@ -38,6 +38,7 @@ public class Reservation extends BaseEntity {
     user.getReservationList().add(reservation);
     return reservation;
   }
+
   public void cancel() {
     if (!this.deleted.equals("N")) {
       throw new UnableStatusException("이미 취소된 예약입니다.");
