@@ -19,10 +19,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.UUID;
@@ -86,7 +83,7 @@ public class ReservationController {
       content = @Content(schema = @Schema(implementation = ErrorResponseDto.class))),
   })
   @NeedLogin
-  @PostMapping("/fetch-owns")
+  @GetMapping("/fetch-owns")
   public ResponseEntity<List<FetchOwnReservationResponse>> fetchReservations(@AuthenticationPrincipal ConcertlyUserDetail userDetail){
     UUID requesterId = userDetail.getUser().getId();
     return ResponseEntity.ok().body(reservationService.fetchOwns(requesterId));

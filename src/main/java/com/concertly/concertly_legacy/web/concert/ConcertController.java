@@ -16,10 +16,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.UUID;
@@ -75,7 +72,7 @@ public class ConcertController {
 
   })
   @NeedLogin
-  @PostMapping("/delete-comment")
+  @DeleteMapping("/delete-comment")
   public ResponseEntity<?> deleteComment(@Valid @RequestBody DeleteConcertCommentRequest request,
                                         @AuthenticationPrincipal ConcertlyUserDetail userDetail) {
     UUID requesterId = userDetail.getUser().getId();
@@ -89,7 +86,7 @@ public class ConcertController {
     @ApiResponse(responseCode = "404", description = "콘서트가 존재하지 않을 경우",
       content = @Content(schema = @Schema(implementation = ErrorResponseDto.class)))
   })
-  @PostMapping("/fetch-reservable-seats")
+  @GetMapping("/fetch-reservable-seats")
   public ResponseEntity<FetchReservableConcertSeatsResponse> fetchReservableSeats(@Valid @RequestBody FetchReservableConcertSeatsRequest request){
     return ResponseEntity.ok().body(concertService.fetchReservableSeats(request));
   }
@@ -98,7 +95,7 @@ public class ConcertController {
   @ApiResponses(value = {
     @ApiResponse(responseCode = "200", description = "조회에 성공한 경우"),
   })
-  @PostMapping("/fetch-reservable-concerts")
+  @GetMapping("/fetch-reservable-concerts")
   public ResponseEntity<List<FetchReservableConcertSeatsResponse>> fetchReservableConcerts() {
     return ResponseEntity.ok().body(concertService.fetchReservableConcerts());
 

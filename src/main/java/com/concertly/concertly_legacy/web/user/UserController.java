@@ -24,10 +24,7 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.UUID;
 
@@ -57,7 +54,7 @@ public class UserController {
   @ApiResponses(value = {
     @ApiResponse(responseCode = "200", description = "로그인에 성공했을 경우."),
   })
-  @PostMapping("/login")
+  @GetMapping("/login")
   public ResponseEntity<?> login(@Valid @RequestBody LoginRequest request) {
     try {
       authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword()));
