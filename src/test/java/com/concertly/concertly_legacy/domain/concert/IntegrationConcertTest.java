@@ -2,6 +2,7 @@ package com.concertly.concertly_legacy.domain.concert;
 
 import com.concertly.concertly_legacy.domain.concert.entity.Concert;
 import com.concertly.concertly_legacy.domain.concert.repository.ConcertRepository;
+import com.concertly.concertly_legacy.domain.concert.repository.JdbcSeatRepository;
 import com.concertly.concertly_legacy.domain.concert.service.ConcertService;
 import com.concertly.concertly_legacy.domain.user.entity.User;
 import com.concertly.concertly_legacy.domain.user.repository.UserRepository;
@@ -12,6 +13,8 @@ import com.concertly.concertly_legacy.web.concert.dto.CreateConcertRequest;
 import com.concertly.concertly_legacy.web.concert.dto.FetchReservableConcertSeatsRequest;
 import com.concertly.concertly_legacy.web.concert.dto.FetchReservableConcertSeatsResponse;
 import com.concertly.concertly_legacy.web.user.dto.CreateUserRequest;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -33,9 +36,10 @@ public class IntegrationConcertTest {
   @Autowired private UserRepository userRepository;
   @Autowired private ConcertService concertService;
   @Autowired private ConcertRepository concertRepository;
+  @PersistenceContext private EntityManager em;
 
   @Test
-  public void 콘서트_정보에는_공연명_공연장소_공연시간_좌석정보가_포함되어야_한다() throws Exception{
+  public void 콘서트_정보에는_공연명_공연장소_공연시간_좌석정보가_포함되어야_한다() {
     //given
     Concert concert = createConcert();
 
@@ -67,17 +71,15 @@ public class IntegrationConcertTest {
     assertFalse(response.getReservableSeats().isEmpty());
   }
 
-  private User createUser() {
-    CreateUserRequest createUserRequest = UserSamples.createUserRequest();
-    String email = userService.create(createUserRequest);
-
-    return userRepository.findByEmail(email).get();
-  }
-
   private Concert createConcert() {
     CreateConcertRequest concertRequest = ConcertSamples.createConcertRequest();
     UUID concertId = concertService.create(concertRequest, UUID.randomUUID());
+    Concert concert = concertRepository.findById(concertId).get();
+    concertService.saveSeatList(concertRequest, concert)
+      .forEach(concert.getSeatList()::add);
 
-    return concertRepository.findById(concertId).get();
+    em.clear();
+    concert = concertRepository.findById(concertId).get();
+    return concert;
   }
 }

@@ -17,6 +17,8 @@ import com.concertly.concertly_legacy.web.reservation.dto.FetchOwnReservationRes
 import com.concertly.concertly_legacy.web.reservation.dto.ReserveConcertRequest;
 import com.concertly.concertly_legacy.web.user.dto.ChargePointRequest;
 import com.concertly.concertly_legacy.web.user.dto.CreateUserRequest;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -41,14 +43,17 @@ public class IntegrationReservationTest {
   @Autowired private UserRepository userRepository;
   @Autowired private ConcertService concertService;
   @Autowired private ConcertRepository concertRepository;
-  @Autowired
-  private ReservationRepository reservationRepository;
+  @Autowired private ReservationRepository reservationRepository;
+  @PersistenceContext private EntityManager em;
 
   @Test
   public void 예약_시_포인트가_차감되어야_한다_취소시_환불되어야_한다() {
     //given
-    User user = createUser();
-    Concert concert = createConcert();
+    String email = createUser();
+    UUID concertId = createConcert();
+
+    User user = userRepository.findByEmail(email).get();
+    Concert concert = concertRepository.findById(concertId).get();
 
     userService.chargePoint(new ChargePointRequest(100000L), user.getId());
 
@@ -65,9 +70,9 @@ public class IntegrationReservationTest {
   @Test
   public void 예약_내역을_조회할_수_있어야_한다() {
     //given
-    User user = createUser();
+    User user = userRepository.findByEmail(createUser()).get();
+    Concert concert = concertRepository.findById(createConcert()).get();
     userService.chargePoint(new ChargePointRequest(100000L), user.getId());
-    Concert concert = createConcert();
     ReserveConcertRequest request = new ReserveConcertRequest(concert.getId(), "A1");
     UUID reservationId = reservationService.concertReservation(request, user.getId()).getReservationId();
 
@@ -85,8 +90,8 @@ public class IntegrationReservationTest {
   @Test
   public void 예약_취소는_공연_시작_24시간_전까지만_가능하다() {
     //given
-    User user = createUser();
-    Concert concert = createConcert();
+    User user = userRepository.findByEmail(createUser()).get();
+    Concert concert = concertRepository.findById(createConcert()).get();
 
     //when
     userService.chargePoint(new ChargePointRequest(100000L), user.getId());
@@ -103,8 +108,8 @@ public class IntegrationReservationTest {
   @Test
   public void 이미_예약된_좌석은_예약할_수_없다() {
     //given
-    User user = createUser();
-    Concert concert = createConcert();
+    User user = userRepository.findByEmail(createUser()).get();
+    Concert concert = concertRepository.findById(createConcert()).get();
 
     //when
     userService.chargePoint(new ChargePointRequest(100000L), user.getId());
@@ -116,17 +121,20 @@ public class IntegrationReservationTest {
     assertThrows(UnableStatusException.class, () -> reservationService.concertReservation(request, user.getId()));
   }
 
-  private User createUser() {
+  private String createUser() {
     CreateUserRequest createUserRequest = UserSamples.createUserRequest();
-    String email = userService.create(createUserRequest);
-
-    return userRepository.findByEmail(email).get();
+    return userService.create(createUserRequest);
   }
 
-  private Concert createConcert() {
+  private UUID createConcert() {
     CreateConcertRequest concertRequest = ConcertSamples.createConcertRequest();
     UUID concertId = concertService.create(concertRequest, UUID.randomUUID());
+    Concert concert = concertRepository.findById(concertId).get();
+    concertService.saveSeatList(concertRequest, concert)
+      .forEach(concert.getSeatList()::add);
 
-    return concertRepository.findById(concertId).get();
+    em.clear();
+    concert = concertRepository.findById(concertId).get();
+    return concert.getId();
   }
 }

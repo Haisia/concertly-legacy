@@ -17,6 +17,8 @@ import com.concertly.concertly_legacy.web.concert.dto.DeleteConcertCommentReques
 import com.concertly.concertly_legacy.web.reservation.dto.ReserveConcertRequest;
 import com.concertly.concertly_legacy.web.user.dto.ChargePointRequest;
 import com.concertly.concertly_legacy.web.user.dto.CreateUserRequest;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -39,6 +41,7 @@ public class IntegrationUserTest {
   @Autowired private ConcertRepository concertRepository;
   @Autowired private ConcertCommentRepository concertCommentRepository;
   @Autowired private ReservationService reservationService;
+  @PersistenceContext private EntityManager em;
 
   @Test
   public void 사용자는_회원가입이_가능해야_한다() {
@@ -55,7 +58,12 @@ public class IntegrationUserTest {
   @Test
   public void 회원은_포인트를_충정할_수_있어야_한다() {
     //given
-    User user = createUser();
+    String email = createUser();
+    UUID concertId = createConcert();
+
+    User user = userRepository.findByEmail(email).get();
+    Concert concert = concertRepository.findById(concertId).get();
+
     //when & then
     assertEquals(0L, user.currentPoints());
 
@@ -69,8 +77,11 @@ public class IntegrationUserTest {
   @Test
   public void 회원은_콘서트에_예약할_수_있어야_한다() {
     //given
-    User user = createUser();
-    Concert concert = createConcert();
+    String email = createUser();
+    UUID concertId = createConcert();
+
+    User user = userRepository.findByEmail(email).get();
+    Concert concert = concertRepository.findById(concertId).get();
 
     //when
     userService.chargePoint(new ChargePointRequest(100000L), user.getId());
@@ -83,8 +94,11 @@ public class IntegrationUserTest {
   @Test
   public void 회원은_콘서트에_댓글을_달_수_있어야_한다() {
     //given
-    User user = createUser();
-    Concert concert = createConcert();
+    String email = createUser();
+    UUID concertId = createConcert();
+
+    User user = userRepository.findByEmail(email).get();
+    Concert concert = concertRepository.findById(concertId).get();
 
     //when
     concertService.createComment(new CreateConcertCommentRequest(concert.getId(), "댓글작성"), user.getId());
@@ -96,9 +110,12 @@ public class IntegrationUserTest {
   @Test
   public void 회원은_작성한_댓글을_삭제할_수_있어야_한다() {
     //given
-    User user = createUser();
+    String email = createUser();
+    UUID concertId = createConcert();
 
-    Concert concert = createConcert();
+    User user = userRepository.findByEmail(email).get();
+    Concert concert = concertRepository.findById(concertId).get();
+
     ConcertComment comment = concert.createComment("테스트댓글");
     concertCommentRepository.save(comment);
     comment.setCreatedBy(user.getId().toString());
@@ -112,18 +129,20 @@ public class IntegrationUserTest {
     assertTrue(foundComment.isEmpty());
   }
 
-  private User createUser() {
+  private String createUser() {
     CreateUserRequest createUserRequest = UserSamples.createUserRequest();
-    String email = userService.create(createUserRequest);
-
-    return userRepository.findByEmail(email).get();
+    return userService.create(createUserRequest);
   }
 
-  private Concert createConcert() {
+  private UUID createConcert() {
     CreateConcertRequest concertRequest = ConcertSamples.createConcertRequest();
     UUID concertId = concertService.create(concertRequest, UUID.randomUUID());
+    Concert concert = concertRepository.findById(concertId).get();
+    concertService.saveSeatList(concertRequest, concert)
+      .forEach(concert.getSeatList()::add);
 
-    return concertRepository.findById(concertId).get();
+    em.clear();
+    concert = concertRepository.findById(concertId).get();
+    return concert.getId();
   }
-
 }
