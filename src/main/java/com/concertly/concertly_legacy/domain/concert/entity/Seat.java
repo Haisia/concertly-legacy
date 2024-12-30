@@ -8,6 +8,7 @@ import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.hibernate.annotations.Where;
 
 import java.time.LocalDateTime;
@@ -27,6 +28,7 @@ public class Seat extends BaseEntity {
   @Column(name = "seat_number", nullable = false)
   private String seatNumber;
 
+  @Setter
   @Enumerated(EnumType.STRING)
   @Column(name = "status", nullable = false)
   private SeatStatus status;
