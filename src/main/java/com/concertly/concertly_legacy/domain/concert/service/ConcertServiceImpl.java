@@ -4,15 +4,20 @@ import com.concertly.concertly_legacy.commons.exceptions.NotFoundException;
 import com.concertly.concertly_legacy.commons.exceptions.PermissionDeniedException;
 import com.concertly.concertly_legacy.domain.concert.entity.Concert;
 import com.concertly.concertly_legacy.domain.concert.entity.ConcertComment;
+import com.concertly.concertly_legacy.domain.concert.entity.Seat;
 import com.concertly.concertly_legacy.domain.concert.repository.ConcertCommentRepository;
 import com.concertly.concertly_legacy.domain.concert.repository.ConcertRepository;
+import com.concertly.concertly_legacy.domain.concert.repository.JdbcSeatRepository;
 import com.concertly.concertly_legacy.web.concert.ConcertApiMapper;
 import com.concertly.concertly_legacy.web.concert.dto.*;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -23,6 +28,10 @@ public class ConcertServiceImpl implements ConcertService {
 
   private final ConcertRepository concertRepository;
   private final ConcertCommentRepository concertCommentRepository;
+  private final JdbcSeatRepository jdbcSeatRepository;
+
+  @PersistenceContext
+  private final EntityManager em;
 
   @Transactional
   @Override
@@ -34,14 +43,18 @@ public class ConcertServiceImpl implements ConcertService {
       .endTime(request.getEndTime())
       .build();
 
+    Concert savedConcert = concertRepository.save(concert);
+    em.flush();
+
+    List<Seat> seatList = new ArrayList<>();
     for (CreateConcertRequest.Seats seat : request.getSeatList()) {
       for (int i = 1; i <= seat.seatMaxLineNumber; i++) {
         String seatNumber = seat.getSeatLabel().toUpperCase() + i;
-        concert.createSeat(seatNumber, seat.getPrice());
+        seatList.add(Seat.createForJdbc(seatNumber, seat.getPrice(), concert));
       }
     }
+    jdbcSeatRepository.saveAll(seatList);
 
-    Concert savedConcert = concertRepository.save(concert);
     log.info("{}님이 {} 콘서트와 좌석을 생성하였습니다.", requesterId, concert.getId());
 
     return savedConcert.getId();

@@ -10,6 +10,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.Where;
 
+import java.time.LocalDateTime;
+import java.util.UUID;
+
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Where(clause = "deleted = 'N'")
@@ -44,6 +47,15 @@ public class Seat extends BaseEntity {
     this.price = price;
     this.concert = concert;
     this.status = SeatStatus.AVAILABLE;
+  }
+
+  public static Seat createForJdbc(String seatNumber, Long price, Concert concert) {
+    Seat seat = new Seat(seatNumber, price, concert);
+    seat.setId(UUID.randomUUID());
+    seat.setDeleted("N");
+    seat.setCreatedBy(concert.getCreatedBy());
+    seat.setCreatedAt(LocalDateTime.now());
+    return seat;
   }
 
   public boolean isAvailable() {
