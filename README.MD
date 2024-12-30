@@ -1,4 +1,4 @@
-- [Notion](https://www.notion.so/README-MD-168881a79f0d805597b9c4bf06be4eae)
+- [Notion](https://tidy-coaster-20b.notion.site/notion)
 - [Swagger](http://haisia-concertly.duckdns.org/)
 - [Postman](documents/concertly.postman_collection.json)
 - 운영서버: http://haisia-concertly.duckdns.org/
