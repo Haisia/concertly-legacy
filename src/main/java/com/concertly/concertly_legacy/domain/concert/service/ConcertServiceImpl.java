@@ -45,7 +45,14 @@ public class ConcertServiceImpl implements ConcertService {
 
     Concert savedConcert = concertRepository.save(concert);
     em.flush();
+    saveSeatList(request, concert);
 
+    log.info("{}님이 {} 콘서트와 좌석을 생성하였습니다.", requesterId, concert.getId());
+    return savedConcert.getId();
+  }
+
+  @Transactional
+  public List<Seat> saveSeatList(CreateConcertRequest request, Concert concert) {
     List<Seat> seatList = new ArrayList<>();
     for (CreateConcertRequest.Seats seat : request.getSeatList()) {
       for (int i = 1; i <= seat.seatMaxLineNumber; i++) {
@@ -55,9 +62,7 @@ public class ConcertServiceImpl implements ConcertService {
     }
     jdbcSeatRepository.saveAll(seatList);
 
-    log.info("{}님이 {} 콘서트와 좌석을 생성하였습니다.", requesterId, concert.getId());
-
-    return savedConcert.getId();
+    return seatList;
   }
 
   @Transactional
