@@ -1,8 +1,10 @@
 package com.concertly.concertly_legacy.web.concert;
 
 import com.concertly.concertly_legacy.commons.annotations.NeedLogin;
+import com.concertly.concertly_legacy.commons.dto.BaseResponse;
 import com.concertly.concertly_legacy.commons.exceptions.ErrorResponseDto;
 import com.concertly.concertly_legacy.config.jwt.ConcertlyUserDetail;
+import com.concertly.concertly_legacy.domain.concert.dto.BaseConcertDto;
 import com.concertly.concertly_legacy.domain.concert.service.ConcertService;
 import com.concertly.concertly_legacy.web.concert.dto.*;
 import io.swagger.v3.oas.annotations.Operation;
@@ -38,11 +40,12 @@ public class ConcertController {
   })
   @NeedLogin
   @PostMapping("/create")
-  public ResponseEntity<?> create(@Valid @RequestBody CreateConcertRequest request,
-                                  @AuthenticationPrincipal ConcertlyUserDetail userDetail) {
+  public BaseResponse<UUID> create(@Valid @RequestBody CreateConcertRequest request,
+                                @AuthenticationPrincipal ConcertlyUserDetail userDetail) {
     UUID requesterId = userDetail.getUser().getId();
-    concertService.create(request, requesterId);
-    return ResponseEntity.ok().build();
+    BaseConcertDto baseConcertDto = concertService.create(request, requesterId);
+
+    return new BaseResponse<>();
   }
 
   @Operation(summary = "콘서트 댓글작성 컨트롤러", description = "콘서트에 댓글을 작성합니다.",

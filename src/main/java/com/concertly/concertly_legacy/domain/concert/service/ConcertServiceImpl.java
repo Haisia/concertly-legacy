@@ -2,6 +2,7 @@ package com.concertly.concertly_legacy.domain.concert.service;
 
 import com.concertly.concertly_legacy.commons.exceptions.NotFoundException;
 import com.concertly.concertly_legacy.commons.exceptions.PermissionDeniedException;
+import com.concertly.concertly_legacy.domain.concert.dto.BaseConcertDto;
 import com.concertly.concertly_legacy.domain.concert.entity.Concert;
 import com.concertly.concertly_legacy.domain.concert.entity.ConcertComment;
 import com.concertly.concertly_legacy.domain.concert.entity.Seat;
@@ -35,7 +36,7 @@ public class ConcertServiceImpl implements ConcertService {
 
   @Transactional
   @Override
-  public UUID create(CreateConcertRequest request, UUID requesterId) {
+  public BaseConcertDto create(CreateConcertRequest request, UUID requesterId) {
     Concert concert = Concert.builder()
       .title(request.getTitle())
       .location(request.getLocation())
@@ -47,8 +48,8 @@ public class ConcertServiceImpl implements ConcertService {
     em.flush();
     saveSeatList(request, concert);
 
-    log.info("{}님이 {} 콘서트와 좌석을 생성하였습니다.", requesterId, concert.getId());
-    return savedConcert.getId();
+    log.info("{}님이 {} 콘서트와 좌석을 생성하였습니다.", requesterId, savedConcert.getId());
+    return BaseConcertDto.from(savedConcert,true, false);
   }
 
   @Transactional
@@ -61,6 +62,7 @@ public class ConcertServiceImpl implements ConcertService {
       }
     }
     jdbcSeatRepository.saveAll(seatList);
+    concert.getAllSeatList().addAll(seatList);
 
     return seatList;
   }

@@ -1,5 +1,6 @@
 package com.concertly.concertly_legacy.domain.concert.service;
 
+import com.concertly.concertly_legacy.domain.concert.dto.BaseConcertDto;
 import com.concertly.concertly_legacy.domain.concert.entity.Concert;
 import com.concertly.concertly_legacy.domain.concert.entity.Seat;
 import com.concertly.concertly_legacy.web.concert.dto.*;
@@ -9,7 +10,7 @@ import java.util.UUID;
 
 public interface ConcertService {
 
-  UUID create(CreateConcertRequest request, UUID requesterId);
+  BaseConcertDto create(CreateConcertRequest request, UUID requesterId);
 
   List<Seat> saveSeatList(CreateConcertRequest request, Concert concert);
 
