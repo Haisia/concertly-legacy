@@ -2,17 +2,13 @@ package com.concertly.concertly_legacy.domain.concert;
 
 import com.concertly.concertly_legacy.domain.concert.entity.Concert;
 import com.concertly.concertly_legacy.domain.concert.repository.ConcertRepository;
-import com.concertly.concertly_legacy.domain.concert.repository.JdbcSeatRepository;
 import com.concertly.concertly_legacy.domain.concert.service.ConcertService;
-import com.concertly.concertly_legacy.domain.user.entity.User;
 import com.concertly.concertly_legacy.domain.user.repository.UserRepository;
 import com.concertly.concertly_legacy.domain.user.service.UserService;
 import com.concertly.concertly_legacy.smaple.ConcertSamples;
-import com.concertly.concertly_legacy.smaple.UserSamples;
 import com.concertly.concertly_legacy.web.concert.dto.CreateConcertRequest;
 import com.concertly.concertly_legacy.web.concert.dto.FetchReservableConcertSeatsRequest;
 import com.concertly.concertly_legacy.web.concert.dto.FetchReservableConcertSeatsResponse;
-import com.concertly.concertly_legacy.web.user.dto.CreateUserRequest;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import org.junit.jupiter.api.Test;
@@ -52,7 +48,7 @@ public class IntegrationConcertTest {
     assertEquals(concert.getTitle(), response.getConcertName());
     assertEquals(concert.getStartTime(), response.getConcertStartTime());
     assertEquals(concert.getEndTime(), response.getConcertEndTime());
-    assertFalse(response.getReservableSeats().isEmpty());
+    assertFalse(response.getReservableSeatResponses().isEmpty());
   }
 
   @Test
@@ -68,7 +64,7 @@ public class IntegrationConcertTest {
     assertEquals(concert.getTitle(), response.getConcertName());
     assertEquals(concert.getStartTime(), response.getConcertStartTime());
     assertEquals(concert.getEndTime(), response.getConcertEndTime());
-    assertFalse(response.getReservableSeats().isEmpty());
+    assertFalse(response.getReservableSeatResponses().isEmpty());
   }
 
   private Concert createConcert() {

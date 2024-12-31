@@ -17,7 +17,6 @@ import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
@@ -44,8 +43,8 @@ public class ConcertController {
   public BaseResponse<CreateConcertResponse> createConcert(@Valid @RequestBody CreateConcertRequest request,
                                           @AuthenticationPrincipal ConcertlyUserDetail userDetail) {
     UUID requesterId = userDetail.getUser().getId();
-    BaseConcertDto baseConcertDto = concertService.create(request, requesterId);
-    return new BaseResponse<>(CreateConcertResponse.from(baseConcertDto));
+    BaseConcertDto result = concertService.create(request, requesterId);
+    return new BaseResponse<>(CreateConcertResponse.from(result));
   }
 
   @Operation(summary = "콘서트 댓글작성 컨트롤러", description = "콘서트에 댓글을 작성합니다.",
@@ -57,11 +56,11 @@ public class ConcertController {
   })
   @NeedLogin
   @PostMapping("/create-comment")
-  public ResponseEntity<?> createConcertCommentRequest(@Valid @RequestBody CreateConcertCommentRequest request,
+  public BaseResponse<CreateConcertCommentResponse> createConcertCommentRequest(@Valid @RequestBody CreateConcertCommentRequest request,
                                                         @AuthenticationPrincipal ConcertlyUserDetail userDetail) {
     UUID requesterId = userDetail.getUser().getId();
-    BaseConcertCommentDto commentDto = concertService.createComment(request, requesterId);
-    return ResponseEntity.ok().build();
+    BaseConcertCommentDto result = concertService.createComment(request, requesterId);
+    return new BaseResponse<>(CreateConcertCommentResponse.from(result));
   }
 
   @Operation(summary = "콘서트 댓글삭제 컨트롤러", description = "콘서트에 댓글을 삭제합니다.",
@@ -76,11 +75,11 @@ public class ConcertController {
   })
   @NeedLogin
   @DeleteMapping("/delete-comment")
-  public ResponseEntity<?> deleteComment(@Valid @RequestBody DeleteConcertCommentRequest request,
+  public BaseResponse<?> deleteComment(@Valid @RequestBody DeleteConcertCommentRequest request,
                                         @AuthenticationPrincipal ConcertlyUserDetail userDetail) {
     UUID requesterId = userDetail.getUser().getId();
     concertService.deleteComment(request, requesterId);
-    return ResponseEntity.ok().build();
+    return new BaseResponse<>("삭제 완료");
   }
 
   @Operation(summary = "예약가능한 좌석 조회 컨트롤러", description = "예약가능한 좌석을 조회합니다.")
@@ -90,8 +89,9 @@ public class ConcertController {
       content = @Content(schema = @Schema(implementation = ErrorResponseDto.class)))
   })
   @GetMapping("/fetch-reservable-seats")
-  public ResponseEntity<FetchReservableConcertSeatsResponse> fetchReservableSeats(@Valid @RequestBody FetchReservableConcertSeatsRequest request){
-    return ResponseEntity.ok().body(concertService.fetchReservableSeats(request));
+  public BaseResponse<FetchReservableConcertSeatsResponse> fetchReservableSeats(@Valid @RequestBody FetchReservableConcertSeatsRequest request){
+    BaseConcertDto result = concertService.fetchReservableSeats(request);
+    return new BaseResponse<>(FetchReservableConcertSeatsResponse.from(result));
   }
 
   @Operation(summary = "예약가능한 콘서트 조회 컨트롤러", description = "예약가능한 콘서트의 정보를 조회힙니다.")
@@ -99,8 +99,9 @@ public class ConcertController {
     @ApiResponse(responseCode = "200", description = "조회에 성공한 경우"),
   })
   @GetMapping("/fetch-reservable-concerts")
-  public ResponseEntity<List<FetchReservableConcertSeatsResponse>> fetchReservableConcerts() {
-    return ResponseEntity.ok().body(concertService.fetchReservableConcerts());
+  public BaseResponse<List<FetchReservableConcertSeatsResponse>> fetchReservableConcerts() {
+    List<BaseConcertDto> result = concertService.fetchReservableConcerts();
+    return new BaseResponse<>(FetchReservableConcertSeatsResponse.from(result));
 
   }
 }

@@ -1,6 +1,5 @@
 package com.concertly.concertly_legacy.commons.entity;
 
-import com.concertly.concertly_legacy.commons.interfaces.Metadata;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -16,7 +15,7 @@ import java.util.UUID;
 @Getter @Setter
 @EntityListeners(AuditingEntityListener.class)
 @MappedSuperclass
-public class BaseEntity implements Metadata {
+public class BaseEntity {
 
   @Id
   @GeneratedValue(strategy = GenerationType.UUID)

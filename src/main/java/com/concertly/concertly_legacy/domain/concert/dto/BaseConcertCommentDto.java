@@ -26,7 +26,7 @@ public class BaseConcertCommentDto extends BaseDto {
   }
 
   private static BaseConcertCommentDto getBaseDto(ConcertComment comment) {
-    BaseConcertCommentDto baseDto = (BaseConcertCommentDto) BaseConcertCommentDto.fromBase(comment);
+    BaseConcertCommentDto baseDto = BaseConcertCommentDto.fromBase(comment, BaseConcertCommentDto.class);
     baseDto.setConcertId(comment.getConcert().getId());
     baseDto.setComment(comment.getComment());
     return baseDto;

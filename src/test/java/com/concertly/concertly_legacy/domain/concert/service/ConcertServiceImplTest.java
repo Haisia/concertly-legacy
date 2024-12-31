@@ -118,7 +118,7 @@ public class ConcertServiceImplTest {
     when(concertRepository.findById(request.getConcertId())).thenReturn(Optional.of(concert));
 
     FetchReservableConcertSeatsResponse response = concertService.fetchReservableSeats(request);
-    assertEquals(concert.findAvailableSeatList().size(), response.getReservableSeats().size());
+    assertEquals(concert.findAvailableSeatList().size(), response.getReservableSeatResponses().size());
   }
 
   @Test

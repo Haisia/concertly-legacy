@@ -143,7 +143,7 @@ public class ReservationServiceImplTest {
     when(userRepository.findById(requesterId)).thenReturn(Optional.of(user));
     FetchOwnReservationResponse response = reservationService.fetchOwns(requesterId).get(0);
 
-    assertEquals(concert.getTitle(), response.getConcertName());
+    assertEquals(concert.getTitle(), response.getConcertTitle());
     assertEquals(seat.getSeatNumber(), response.getSeatNumber());
     verify(userRepository, times(1)).findById(requesterId);
   }

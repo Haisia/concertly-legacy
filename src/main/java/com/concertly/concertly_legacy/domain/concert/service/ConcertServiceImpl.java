@@ -10,7 +10,6 @@ import com.concertly.concertly_legacy.domain.concert.entity.Seat;
 import com.concertly.concertly_legacy.domain.concert.repository.ConcertCommentRepository;
 import com.concertly.concertly_legacy.domain.concert.repository.ConcertRepository;
 import com.concertly.concertly_legacy.domain.concert.repository.JdbcSeatRepository;
-import com.concertly.concertly_legacy.web.concert.ConcertApiMapper;
 import com.concertly.concertly_legacy.web.concert.dto.*;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
@@ -45,12 +44,15 @@ public class ConcertServiceImpl implements ConcertService {
       .endTime(request.getEndTime())
       .build();
 
-    Concert savedConcert = concertRepository.save(concert);
+    concertRepository.save(concert);
     em.flush();
     saveSeatList(request, concert);
+    em.merge(concert);
 
-    log.info("{}님이 {} 콘서트와 좌석을 생성하였습니다.", requesterId, savedConcert.getId());
-    return BaseConcertDto.from(savedConcert,true, false);
+    log.info("{}님이 {} 콘서트와 좌석을 생성하였습니다.", requesterId, concert.getId());
+    BaseConcertDto from = BaseConcertDto.from(concert, true, false);
+    System.out.println();
+    return from;
   }
 
   @Transactional
@@ -82,7 +84,7 @@ public class ConcertServiceImpl implements ConcertService {
 
   @Transactional
   @Override
-  public void deleteComment(DeleteConcertCommentRequest request, UUID requesterId) {
+  public UUID deleteComment(DeleteConcertCommentRequest request, UUID requesterId) {
     ConcertComment concertComment = concertCommentRepository.findById(request.getCommentId())
       .orElseThrow(() -> new NotFoundException("ConcertComment", "id", request.getCommentId().toString()));
     if (!concertComment.getCreatedBy().equals(requesterId.toString())) {
@@ -91,24 +93,24 @@ public class ConcertServiceImpl implements ConcertService {
 
     concertCommentRepository.deleteById(request.getCommentId());
     log.info("{} 님이 {} 댓글을 삭제하였습니다.", requesterId, request.getCommentId());
+    return request.getCommentId();
   }
 
   @Transactional
   @Override
-  public FetchReservableConcertSeatsResponse fetchReservableSeats(FetchReservableConcertSeatsRequest request) {
+  public BaseConcertDto fetchReservableSeats(FetchReservableConcertSeatsRequest request) {
     Concert concert = concertRepository.findById(request.getConcertId())
       .orElseThrow(() -> new NotFoundException("Concert", "id", request.getConcertId().toString()));
-
-    return ConcertApiMapper.toFetchReservableConcertSeatsResponse(concert);
+    return BaseConcertDto.from(concert, true, false);
   }
 
   @Transactional
   @Override
-  public List<FetchReservableConcertSeatsResponse> fetchReservableConcerts() {
+  public List<BaseConcertDto> fetchReservableConcerts() {
     return concertRepository.findAll()
       .stream()
       .filter(Concert::isReservationAvailable)
-      .map(ConcertApiMapper::toFetchReservableConcertSeatsResponse)
+      .map(c -> BaseConcertDto.from(c, true, false))
       .toList()
       ;
   }

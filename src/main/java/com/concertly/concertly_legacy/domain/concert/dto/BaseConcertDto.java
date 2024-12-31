@@ -30,7 +30,7 @@ public class BaseConcertDto extends BaseDto {
   }
 
   private static BaseConcertDto getBaseDto(Concert concert) {
-    BaseConcertDto baseDto = (BaseConcertDto) BaseConcertDto.fromBase(concert);
+    BaseConcertDto baseDto = BaseConcertDto.fromBase(concert, BaseConcertDto.class);
     baseDto.setTitle(concert.getTitle());
     baseDto.setLocation(concert.getLocation());
     baseDto.setStartTime(concert.getStartTime());

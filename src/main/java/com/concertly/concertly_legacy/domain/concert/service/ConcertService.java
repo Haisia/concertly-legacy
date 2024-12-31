@@ -17,10 +17,10 @@ public interface ConcertService {
 
   BaseConcertCommentDto createComment(CreateConcertCommentRequest request, UUID requesterId);
 
-  void deleteComment(DeleteConcertCommentRequest request, UUID requesterId);
+  UUID deleteComment(DeleteConcertCommentRequest request, UUID requesterId);
 
-  FetchReservableConcertSeatsResponse fetchReservableSeats(FetchReservableConcertSeatsRequest request);
+  BaseConcertDto fetchReservableSeats(FetchReservableConcertSeatsRequest request);
 
-  List<FetchReservableConcertSeatsResponse> fetchReservableConcerts();
+  List<BaseConcertDto> fetchReservableConcerts();
 
 }

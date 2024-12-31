@@ -30,7 +30,7 @@ public class BaseSeatDto extends BaseDto {
   }
 
   private static BaseSeatDto getBaseDto(Seat seat) {
-    BaseSeatDto baseDto = (BaseSeatDto) BaseSeatDto.fromBase(seat);
+    BaseSeatDto baseDto = BaseSeatDto.fromBase(seat, BaseSeatDto.class);
     baseDto.setConcertId(seat.getConcert().getId());
     baseDto.setSeatNumber(seat.getSeatNumber());
     baseDto.setStatus(seat.getStatus());

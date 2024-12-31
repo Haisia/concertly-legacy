@@ -1,8 +1,10 @@
 package com.concertly.concertly_legacy.web.reservation;
 
 import com.concertly.concertly_legacy.commons.annotations.NeedLogin;
+import com.concertly.concertly_legacy.commons.dto.BaseResponse;
 import com.concertly.concertly_legacy.commons.exceptions.ErrorResponseDto;
 import com.concertly.concertly_legacy.config.jwt.ConcertlyUserDetail;
+import com.concertly.concertly_legacy.domain.reservation.dto.BaseReservationDto;
 import com.concertly.concertly_legacy.domain.reservation.service.ReservationService;
 import com.concertly.concertly_legacy.web.reservation.dto.CancelReservationRequest;
 import com.concertly.concertly_legacy.web.reservation.dto.FetchOwnReservationResponse;
@@ -49,10 +51,11 @@ public class ReservationController {
   })
   @NeedLogin
   @PostMapping("/reserve-concert")
-  public ResponseEntity<ReservationConcertResponse> reserveConcert(@Valid @RequestBody ReserveConcertRequest request,
-                                                                    @AuthenticationPrincipal ConcertlyUserDetail userDetail) {
+  public BaseResponse<ReservationConcertResponse> reserveConcert(@Valid @RequestBody ReserveConcertRequest request,
+                                                                  @AuthenticationPrincipal ConcertlyUserDetail userDetail) {
     UUID requesterId = userDetail.getUser().getId();
-    return ResponseEntity.ok().body(reservationService.concertReservation(request, requesterId));
+    BaseReservationDto result = reservationService.concertReservation(request, requesterId);
+    return new BaseResponse<>(ReservationConcertResponse.from(result));
   }
 
   @Operation(summary = "콘서트 예약을 취소합니다.", description = "콘서트 예약을 취소합니다.",
@@ -68,11 +71,11 @@ public class ReservationController {
   })
   @NeedLogin
   @PostMapping("/cancel")
-  public ResponseEntity<?> cancelReservation(@Valid @RequestBody CancelReservationRequest request,
+  public BaseResponse<?> cancelReservation(@Valid @RequestBody CancelReservationRequest request,
                                               @AuthenticationPrincipal ConcertlyUserDetail userDetail){
     UUID requesterId = userDetail.getUser().getId();
     reservationService.cancelReservation(request, requesterId);
-    return ResponseEntity.ok().build();
+    return new BaseResponse<>("삭제가 완료되었습니다.");
   }
 
   @Operation(summary = "자신의 콘서트 예약 기록을 확인하는 컨트롤러.", description = "자신의 콘서트 예약 기록을 확인합니다.",
@@ -86,7 +89,8 @@ public class ReservationController {
   @GetMapping("/fetch-owns")
   public ResponseEntity<List<FetchOwnReservationResponse>> fetchReservations(@AuthenticationPrincipal ConcertlyUserDetail userDetail){
     UUID requesterId = userDetail.getUser().getId();
-    return ResponseEntity.ok().body(reservationService.fetchOwns(requesterId));
+    List<BaseReservationDto> results = reservationService.fetchOwns(requesterId);
+    return ResponseEntity.ok().body(FetchOwnReservationResponse.from(results));
   }
 
 }

@@ -2,7 +2,6 @@ package com.concertly.concertly_legacy.web.concert.dto;
 
 import com.concertly.concertly_legacy.commons.dto.BaseDto;
 import com.concertly.concertly_legacy.commons.enums.SeatStatus;
-import com.concertly.concertly_legacy.commons.interfaces.Metadata;
 import com.concertly.concertly_legacy.domain.concert.dto.BaseConcertDto;
 import com.concertly.concertly_legacy.domain.concert.dto.BaseSeatDto;
 import lombok.Data;
@@ -23,8 +22,8 @@ public class CreateConcertResponse extends BaseDto {
 
   public List<SeatResponse> seats;
 
-  public static CreateConcertResponse from(Metadata dto) {
-    CreateConcertResponse response = (CreateConcertResponse) BaseDto.fromBase(dto);
+  public static CreateConcertResponse from(BaseConcertDto dto) {
+    CreateConcertResponse response = CreateConcertResponse.fromBase(dto, CreateConcertResponse.class);
     response.setConcertId(dto.getId());
     response.setTitle(dto.getTitle());
     response.setLocation(dto.getLocation());
@@ -34,14 +33,15 @@ public class CreateConcertResponse extends BaseDto {
     return response;
   }
 
+  @EqualsAndHashCode(callSuper = true)
   @Data
-  public static class SeatResponse {
+  public static class SeatResponse extends BaseDto {
     public String seatNumber;
     public SeatStatus status;
     public Long price;
 
     public static SeatResponse from(BaseSeatDto dto) {
-      SeatResponse response = new SeatResponse();
+      SeatResponse response = SeatResponse.fromBase(dto, SeatResponse.class);
       response.setSeatNumber(dto.getSeatNumber());
       response.setStatus(dto.getStatus());
       response.setPrice(dto.getPrice());

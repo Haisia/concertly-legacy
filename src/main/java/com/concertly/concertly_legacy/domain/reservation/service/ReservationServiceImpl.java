@@ -6,14 +6,12 @@ import com.concertly.concertly_legacy.commons.exceptions.UnableStatusException;
 import com.concertly.concertly_legacy.domain.concert.entity.Concert;
 import com.concertly.concertly_legacy.domain.concert.entity.Seat;
 import com.concertly.concertly_legacy.domain.concert.repository.ConcertRepository;
+import com.concertly.concertly_legacy.domain.reservation.dto.BaseReservationDto;
 import com.concertly.concertly_legacy.domain.reservation.entity.Reservation;
 import com.concertly.concertly_legacy.domain.reservation.repository.ReservationRepository;
 import com.concertly.concertly_legacy.domain.user.entity.User;
 import com.concertly.concertly_legacy.domain.user.repository.UserRepository;
-import com.concertly.concertly_legacy.web.reservation.ReservationApiMapper;
 import com.concertly.concertly_legacy.web.reservation.dto.CancelReservationRequest;
-import com.concertly.concertly_legacy.web.reservation.dto.FetchOwnReservationResponse;
-import com.concertly.concertly_legacy.web.reservation.dto.ReservationConcertResponse;
 import com.concertly.concertly_legacy.web.reservation.dto.ReserveConcertRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -34,7 +32,7 @@ public class ReservationServiceImpl implements ReservationService {
 
   @Transactional
   @Override
-  public ReservationConcertResponse concertReservation(ReserveConcertRequest request, UUID requesterId) {
+  public BaseReservationDto concertReservation(ReserveConcertRequest request, UUID requesterId) {
     Concert concert = concertRepository.findWithSeatsById(request.getConcertId())
       .orElseThrow(() -> new NotFoundException("Concert", "concertId", request.getConcertId().toString()));
 
@@ -47,8 +45,8 @@ public class ReservationServiceImpl implements ReservationService {
       .orElseThrow(() -> new NotFoundException("User", "id", requesterId.toString()));
 
     Reservation reservation = Reservation.reserve(foundSeat, user);
-    Reservation savedReservation = reservationRepository.save(reservation);
-    return new ReservationConcertResponse(savedReservation.getId());
+    reservationRepository.save(reservation);
+    return BaseReservationDto.from(reservation, true, true, true);
   }
 
   @Transactional
@@ -67,10 +65,11 @@ public class ReservationServiceImpl implements ReservationService {
 
   @Transactional
   @Override
-  public List<FetchOwnReservationResponse> fetchOwns(UUID requesterId) {
+  public List<BaseReservationDto> fetchOwns(UUID requesterId) {
     User user = userRepository.findById(requesterId)
       .orElseThrow(() -> new NotFoundException("User", "id", requesterId.toString()));
-    return ReservationApiMapper.toFetchOwnReservationResponse(user.ownReservations());
+    List<Reservation> reservations = user.ownReservations();
+    return BaseReservationDto.from(reservations, true, true, true);
   }
 
 }
