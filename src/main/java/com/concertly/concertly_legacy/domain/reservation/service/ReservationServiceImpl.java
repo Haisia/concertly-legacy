@@ -7,6 +7,7 @@ import com.concertly.concertly_legacy.domain.concert.entity.Concert;
 import com.concertly.concertly_legacy.domain.concert.entity.Seat;
 import com.concertly.concertly_legacy.domain.concert.repository.ConcertRepository;
 import com.concertly.concertly_legacy.domain.reservation.dto.BaseReservationDto;
+import com.concertly.concertly_legacy.domain.reservation.dto.BaseReservationDtoBuilder;
 import com.concertly.concertly_legacy.domain.reservation.entity.Reservation;
 import com.concertly.concertly_legacy.domain.reservation.repository.ReservationRepository;
 import com.concertly.concertly_legacy.domain.user.entity.User;
@@ -46,7 +47,12 @@ public class ReservationServiceImpl implements ReservationService {
 
     Reservation reservation = Reservation.reserve(foundSeat, user);
     reservationRepository.save(reservation);
-    return BaseReservationDto.from(reservation, true, true, true);
+
+    return BaseReservationDtoBuilder.builder(reservation)
+      .withConcert()
+      .withSeat()
+      .withUser()
+      .build();
   }
 
   @Transactional
@@ -68,8 +74,14 @@ public class ReservationServiceImpl implements ReservationService {
   public List<BaseReservationDto> fetchOwns(UUID requesterId) {
     User user = userRepository.findById(requesterId)
       .orElseThrow(() -> new NotFoundException("User", "id", requesterId.toString()));
-    List<Reservation> reservations = user.ownReservations();
-    return BaseReservationDto.from(reservations, true, true, true);
-  }
 
+    return user.ownReservations().stream()
+      .map(reservation ->
+        BaseReservationDtoBuilder.builder(reservation)
+          .withConcert()
+          .withSeat()
+          .withUser()
+          .build()
+      ).toList();
+  }
 }

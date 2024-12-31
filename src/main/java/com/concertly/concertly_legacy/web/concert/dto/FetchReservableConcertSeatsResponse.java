@@ -4,9 +4,7 @@ import com.concertly.concertly_legacy.commons.dto.BaseDto;
 import com.concertly.concertly_legacy.domain.concert.dto.BaseConcertDto;
 import com.concertly.concertly_legacy.domain.concert.dto.BaseSeatDto;
 import io.swagger.v3.oas.annotations.media.Schema;
-import lombok.Builder;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
+import lombok.*;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -14,9 +12,10 @@ import java.util.UUID;
 
 import static com.concertly.concertly_legacy.commons.constants.DtoMetadataConstants.*;
 
-@EqualsAndHashCode(callSuper = true)
 @Schema(description = "예약 가능한 콘서트 좌석 응답 Dto")
+@EqualsAndHashCode(callSuper = true)
 @Builder
+@NoArgsConstructor @AllArgsConstructor
 @Data
 public class FetchReservableConcertSeatsResponse extends BaseDto {
 

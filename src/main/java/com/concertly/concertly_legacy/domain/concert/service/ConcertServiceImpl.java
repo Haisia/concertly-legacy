@@ -2,6 +2,7 @@ package com.concertly.concertly_legacy.domain.concert.service;
 
 import com.concertly.concertly_legacy.commons.exceptions.NotFoundException;
 import com.concertly.concertly_legacy.commons.exceptions.PermissionDeniedException;
+import com.concertly.concertly_legacy.domain.concert.dto.BaseConcertDtoBuilder;
 import com.concertly.concertly_legacy.domain.concert.dto.BaseConcertCommentDto;
 import com.concertly.concertly_legacy.domain.concert.dto.BaseConcertDto;
 import com.concertly.concertly_legacy.domain.concert.entity.Concert;
@@ -50,9 +51,10 @@ public class ConcertServiceImpl implements ConcertService {
     em.merge(concert);
 
     log.info("{}님이 {} 콘서트와 좌석을 생성하였습니다.", requesterId, concert.getId());
-    BaseConcertDto from = BaseConcertDto.from(concert, true, false);
-    System.out.println();
-    return from;
+    return BaseConcertDtoBuilder.builder(concert)
+      .withSeats()
+      .withComments()
+      .build();
   }
 
   @Transactional
@@ -101,7 +103,9 @@ public class ConcertServiceImpl implements ConcertService {
   public BaseConcertDto fetchReservableSeats(FetchReservableConcertSeatsRequest request) {
     Concert concert = concertRepository.findById(request.getConcertId())
       .orElseThrow(() -> new NotFoundException("Concert", "id", request.getConcertId().toString()));
-    return BaseConcertDto.from(concert, true, false);
+    return BaseConcertDtoBuilder.builder(concert)
+      .withSeats()
+      .build();
   }
 
   @Transactional
@@ -110,7 +114,7 @@ public class ConcertServiceImpl implements ConcertService {
     return concertRepository.findAll()
       .stream()
       .filter(Concert::isReservationAvailable)
-      .map(c -> BaseConcertDto.from(c, true, false))
+      .map(c -> BaseConcertDtoBuilder.builder(c).withSeats().build())
       .toList()
       ;
   }
