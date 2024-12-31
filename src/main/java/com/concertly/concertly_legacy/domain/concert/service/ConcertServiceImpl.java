@@ -2,6 +2,7 @@ package com.concertly.concertly_legacy.domain.concert.service;
 
 import com.concertly.concertly_legacy.commons.exceptions.NotFoundException;
 import com.concertly.concertly_legacy.commons.exceptions.PermissionDeniedException;
+import com.concertly.concertly_legacy.domain.concert.dto.BaseConcertCommentDto;
 import com.concertly.concertly_legacy.domain.concert.dto.BaseConcertDto;
 import com.concertly.concertly_legacy.domain.concert.entity.Concert;
 import com.concertly.concertly_legacy.domain.concert.entity.ConcertComment;
@@ -69,14 +70,14 @@ public class ConcertServiceImpl implements ConcertService {
 
   @Transactional
   @Override
-  public UUID createComment(CreateConcertCommentRequest request, UUID requesterId) {
+  public BaseConcertCommentDto createComment(CreateConcertCommentRequest request, UUID requesterId) {
     Concert concert = concertRepository.findById(request.getConcertId())
       .orElseThrow(() -> new NotFoundException("Concert", "id", request.getConcertId().toString()));
 
     ConcertComment comment = concert.createComment(request.getComment());
     concertCommentRepository.save(comment);
     log.info("{} 님이 {} 에 {} 댓글을 달았습니다.", requesterId, request.getConcertId(), comment.getId());
-    return comment.getId();
+    return BaseConcertCommentDto.from(comment);
   }
 
   @Transactional

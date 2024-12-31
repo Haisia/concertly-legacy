@@ -4,6 +4,7 @@ import com.concertly.concertly_legacy.commons.annotations.NeedLogin;
 import com.concertly.concertly_legacy.commons.dto.BaseResponse;
 import com.concertly.concertly_legacy.commons.exceptions.ErrorResponseDto;
 import com.concertly.concertly_legacy.config.jwt.ConcertlyUserDetail;
+import com.concertly.concertly_legacy.domain.concert.dto.BaseConcertCommentDto;
 import com.concertly.concertly_legacy.domain.concert.dto.BaseConcertDto;
 import com.concertly.concertly_legacy.domain.concert.service.ConcertService;
 import com.concertly.concertly_legacy.web.concert.dto.*;
@@ -40,12 +41,11 @@ public class ConcertController {
   })
   @NeedLogin
   @PostMapping("/create")
-  public BaseResponse<UUID> create(@Valid @RequestBody CreateConcertRequest request,
-                                @AuthenticationPrincipal ConcertlyUserDetail userDetail) {
+  public BaseResponse<CreateConcertResponse> createConcert(@Valid @RequestBody CreateConcertRequest request,
+                                          @AuthenticationPrincipal ConcertlyUserDetail userDetail) {
     UUID requesterId = userDetail.getUser().getId();
     BaseConcertDto baseConcertDto = concertService.create(request, requesterId);
-
-    return new BaseResponse<>();
+    return new BaseResponse<>(CreateConcertResponse.from(baseConcertDto));
   }
 
   @Operation(summary = "콘서트 댓글작성 컨트롤러", description = "콘서트에 댓글을 작성합니다.",
@@ -56,11 +56,11 @@ public class ConcertController {
       content = @Content(schema = @Schema(implementation = ErrorResponseDto.class)))
   })
   @NeedLogin
-  @PostMapping("/write-comment")
-  public ResponseEntity<?> writeComment(@Valid @RequestBody CreateConcertCommentRequest request,
-                                        @AuthenticationPrincipal ConcertlyUserDetail userDetail) {
+  @PostMapping("/create-comment")
+  public ResponseEntity<?> createConcertCommentRequest(@Valid @RequestBody CreateConcertCommentRequest request,
+                                                        @AuthenticationPrincipal ConcertlyUserDetail userDetail) {
     UUID requesterId = userDetail.getUser().getId();
-    concertService.createComment(request, requesterId);
+    BaseConcertCommentDto commentDto = concertService.createComment(request, requesterId);
     return ResponseEntity.ok().build();
   }
 

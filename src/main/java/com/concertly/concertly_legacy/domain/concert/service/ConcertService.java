@@ -1,5 +1,6 @@
 package com.concertly.concertly_legacy.domain.concert.service;
 
+import com.concertly.concertly_legacy.domain.concert.dto.BaseConcertCommentDto;
 import com.concertly.concertly_legacy.domain.concert.dto.BaseConcertDto;
 import com.concertly.concertly_legacy.domain.concert.entity.Concert;
 import com.concertly.concertly_legacy.domain.concert.entity.Seat;
@@ -14,7 +15,7 @@ public interface ConcertService {
 
   List<Seat> saveSeatList(CreateConcertRequest request, Concert concert);
 
-  UUID createComment(CreateConcertCommentRequest request, UUID requesterId);
+  BaseConcertCommentDto createComment(CreateConcertCommentRequest request, UUID requesterId);
 
   void deleteComment(DeleteConcertCommentRequest request, UUID requesterId);
 

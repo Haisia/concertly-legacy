@@ -1,15 +1,20 @@
 package com.concertly.concertly_legacy.web.concert.dto;
 
+import com.concertly.concertly_legacy.commons.dto.BaseDto;
 import com.concertly.concertly_legacy.commons.enums.SeatStatus;
+import com.concertly.concertly_legacy.commons.interfaces.Metadata;
 import com.concertly.concertly_legacy.domain.concert.dto.BaseConcertDto;
+import com.concertly.concertly_legacy.domain.concert.dto.BaseSeatDto;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
+@EqualsAndHashCode(callSuper = true)
 @Data
-public class CreateConcertResponse {
+public class CreateConcertResponse extends BaseDto {
   public UUID concertId;
   public String title;
   public String location;
@@ -18,21 +23,36 @@ public class CreateConcertResponse {
 
   public List<SeatResponse> seats;
 
-  public static class SeatResponse {
-    public String seatNumber;
-    public SeatStatus status;
-    public Long price;
-  }
-
-  public static CreateConcertResponse from(BaseConcertDto dto) {
-    CreateConcertResponse response = new CreateConcertResponse();
+  public static CreateConcertResponse from(Metadata dto) {
+    CreateConcertResponse response = (CreateConcertResponse) BaseDto.fromBase(dto);
     response.setConcertId(dto.getId());
     response.setTitle(dto.getTitle());
     response.setLocation(dto.getLocation());
     response.setStartTime(dto.getStartTime());
     response.setEndTime(dto.getEndTime());
-    response.setStartTime(dto.getStartTime());
-    response.setEndTime(dto.getEndTime());
+    response.setSeats(SeatResponse.from(dto.getSeatList()));
+    return response;
   }
 
+  @Data
+  public static class SeatResponse {
+    public String seatNumber;
+    public SeatStatus status;
+    public Long price;
+
+    public static SeatResponse from(BaseSeatDto dto) {
+      SeatResponse response = new SeatResponse();
+      response.setSeatNumber(dto.getSeatNumber());
+      response.setStatus(dto.getStatus());
+      response.setPrice(dto.getPrice());
+      return response;
+    }
+
+    public static List<SeatResponse> from(List<BaseSeatDto> dtoList) {
+      return dtoList.stream()
+        .map(SeatResponse::from)
+        .toList()
+        ;
+    }
+  }
 }
