@@ -7,78 +7,6 @@
 	},
 	"item": [
 		{
-			"name": "포인트 충전",
-			"request": {
-				"auth": {
-					"type": "bearer",
-					"bearer": [
-						{
-							"key": "token",
-							"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0ZXN0QHRlc3QuY29tIiwiaWF0IjoxNzM1Mzc4NzU5LCJleHAiOjE3MzUzODIzNTl9.UC4vffFBlmTl40Q1pjOEybQ2rzoN61SUOoXAT5FGsWM",
-							"type": "string"
-						}
-					]
-				},
-				"method": "POST",
-				"header": [],
-				"body": {
-					"mode": "raw",
-					"raw": "{\r\n    \"point\" : -1\r\n}",
-					"options": {
-						"raw": {
-							"language": "json"
-						}
-					}
-				},
-				"url": {
-					"raw": "http://haisia-concertly.duckdns.org/api/user/charge-point",
-					"protocol": "http",
-					"host": [
-						"haisia-concertly",
-						"duckdns",
-						"org"
-					],
-					"path": [
-						"api",
-						"user",
-						"charge-point"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "로그인",
-			"request": {
-				"method": "POST",
-				"header": [],
-				"body": {
-					"mode": "raw",
-					"raw": "{\r\n    \"email\" : \"test@test.com\",\r\n    \"password\" : \"123123\"\r\n}",
-					"options": {
-						"raw": {
-							"language": "json"
-						}
-					}
-				},
-				"url": {
-					"raw": "http://haisia-concertly.duckdns.org/api/user/login",
-					"protocol": "http",
-					"host": [
-						"haisia-concertly",
-						"duckdns",
-						"org"
-					],
-					"path": [
-						"api",
-						"user",
-						"login"
-					]
-				}
-			},
-			"response": []
-		},
-		{
 			"name": "회원가입",
 			"request": {
 				"method": "POST",
@@ -110,16 +38,131 @@
 			"response": []
 		},
 		{
-			"name": "예약 가능목록 조회",
+			"name": "로그인",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"email\" : \"test@test.com\",\r\n    \"password\" : \"123123\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://haisia-concertly.duckdns.org/api/user/login",
+					"protocol": "http",
+					"host": [
+						"haisia-concertly",
+						"duckdns",
+						"org"
+					],
+					"path": [
+						"api",
+						"user",
+						"login"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "포인트 충전",
 			"request": {
 				"auth": {
-					"type": "noauth"
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0ZXN0QHRlc3QuY29tIiwiaWF0IjoxNzM1NzA2MzkxLCJleHAiOjE3MzU3MDk5OTF9.MSF8sTJwJ1iBLZQKjyHROH72dDRY5MOpslt6JBYv-c0",
+							"type": "string"
+						}
+					]
 				},
 				"method": "POST",
 				"header": [],
 				"body": {
 					"mode": "raw",
+					"raw": "{\r\n    \"point\" : 200000\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://haisia-concertly.duckdns.org/api/user/charge-point",
+					"protocol": "http",
+					"host": [
+						"haisia-concertly",
+						"duckdns",
+						"org"
+					],
+					"path": [
+						"api",
+						"user",
+						"charge-point"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "예약 가능 콘서트 정보",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
 					"raw": "{\r\n    \"concertId\" : \"f21dee7d-0775-4d8f-a0fa-7d4136460f98\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://haisia-concertly.duckdns.org/api/concert/fetch-reservable-concerts",
+					"protocol": "http",
+					"host": [
+						"haisia-concertly",
+						"duckdns",
+						"org"
+					],
+					"path": [
+						"api",
+						"concert",
+						"fetch-reservable-concerts"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "예약 가능 좌석 조회",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"concertId\" : \"0d3e6779-f42a-4faf-a78c-033014bcd8bd\"\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -144,135 +187,6 @@
 			"response": []
 		},
 		{
-			"name": "댓글 삭제",
-			"request": {
-				"auth": {
-					"type": "bearer",
-					"bearer": [
-						{
-							"key": "token",
-							"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0ZXN0QHRlc3QuY29tIiwiaWF0IjoxNzM1MzY0OTc3LCJleHAiOjE3MzUzNjg1Nzd9.5K1N_k6Bzm8UPQS4ZsEdlF8paCzZ2E_tzKJxARg64t8",
-							"type": "string"
-						}
-					]
-				},
-				"method": "POST",
-				"header": [],
-				"body": {
-					"mode": "raw",
-					"raw": "{\r\n    \"commentId\" : \"b0b25725-cfae-47b8-8a79-80b9a9faa4ae\"\r\n}",
-					"options": {
-						"raw": {
-							"language": "json"
-						}
-					}
-				},
-				"url": {
-					"raw": "http://haisia-concertly.duckdns.org/api/concert/delete-comment",
-					"protocol": "http",
-					"host": [
-						"haisia-concertly",
-						"duckdns",
-						"org"
-					],
-					"path": [
-						"api",
-						"concert",
-						"delete-comment"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "콘서트 댓글 작성",
-			"request": {
-				"auth": {
-					"type": "bearer",
-					"bearer": [
-						{
-							"key": "token",
-							"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0ZXN0QHRlc3QuY29tIiwiaWF0IjoxNzM1MzY0OTc3LCJleHAiOjE3MzUzNjg1Nzd9.5K1N_k6Bzm8UPQS4ZsEdlF8paCzZ2E_tzKJxARg64t8",
-							"type": "string"
-						}
-					]
-				},
-				"method": "POST",
-				"header": [],
-				"body": {
-					"mode": "raw",
-					"raw": "{\r\n    \"concertId\" : \"fa1bc29c-b32f-464f-a648-09cf2d5ea0c3\",\r\n    \"comment\": \"댓글!\"\r\n}",
-					"options": {
-						"raw": {
-							"language": "json"
-						}
-					}
-				},
-				"url": {
-					"raw": "http://haisia-concertly.duckdns.org/api/concert/write-comment",
-					"protocol": "http",
-					"host": [
-						"haisia-concertly",
-						"duckdns",
-						"org"
-					],
-					"path": [
-						"api",
-						"concert",
-						"write-comment"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "콘서트 생성",
-			"request": {
-				"auth": {
-					"type": "bearer",
-					"bearer": [
-						{
-							"key": "token",
-							"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0ZXN0QHRlc3QuY29tIiwiaWF0IjoxNzM1MzY3NzEzLCJleHAiOjE3MzUzNzEzMTN9.vSESil6tnDaNScGIoR1ty0oBwUBLS_WBriT3qUEenQg",
-							"type": "string"
-						}
-					]
-				},
-				"method": "POST",
-				"header": [
-					{
-						"key": "Authorization",
-						"value": "Beaer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0ZXN0QHRlc3QuY29tIiwiaWF0IjoxNzM1MzA2NzU2LCJleHAiOjE3MzUzMTAzNTZ9.X2bowWM9bxt47yiYD3uMszPaviqw_D3va_yxrhWWCg0",
-						"type": "text"
-					}
-				],
-				"body": {
-					"mode": "raw",
-					"raw": "{\r\n    \"title\" : \"맘마미아\",\r\n    \"location\" : \"예술의전당 3층\",\r\n    \"startTime\" : \"2024-12-28T19:00:00\",\r\n    \"endTime\" : \"2024-12-28T22:00:00\",\r\n    \"seatList\": [\r\n        {\r\n            \"seatLabel\" : \"A\",\r\n            \"seatMaxLineNumber\" : \"30\",\r\n            \"price\" : \"35000\"\r\n        },\r\n        {\r\n            \"seatLabel\" : \"B\",\r\n            \"seatMaxLineNumber\" : \"80\",\r\n            \"price\" : \"20000\"\r\n        }\r\n    ]\r\n}",
-					"options": {
-						"raw": {
-							"language": "json"
-						}
-					}
-				},
-				"url": {
-					"raw": "http://haisia-concertly.duckdns.org/api/concert/create",
-					"protocol": "http",
-					"host": [
-						"haisia-concertly",
-						"duckdns",
-						"org"
-					],
-					"path": [
-						"api",
-						"concert",
-						"create"
-					]
-				}
-			},
-			"response": []
-		},
-		{
 			"name": "예약",
 			"request": {
 				"auth": {
@@ -280,7 +194,7 @@
 					"bearer": [
 						{
 							"key": "token",
-							"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0ZXN0QHRlc3QuY29tIiwiaWF0IjoxNzM1MzY4NjEzLCJleHAiOjE3MzUzNzIyMTN9.ZZQuSdW4EAhbk2_eDAoCKca36u0xI1WH5KTeUnsfU6M",
+							"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0ZXN0QHRlc3QuY29tIiwiaWF0IjoxNzM1NzA2MzkxLCJleHAiOjE3MzU3MDk5OTF9.MSF8sTJwJ1iBLZQKjyHROH72dDRY5MOpslt6JBYv-c0",
 							"type": "string"
 						}
 					]
@@ -289,7 +203,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n    \"concertId\" : \"f21dee7d-0775-4d8f-a0fa-7d4136460f98\",\r\n    \"seatNumber\" : \"B8\"\r\n}",
+					"raw": "{\r\n    \"concertId\" : \"0d3e6779-f42a-4faf-a78c-033014bcd8bd\",\r\n    \"seatNumber\" : \"B8\"\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -308,47 +222,6 @@
 						"api",
 						"reservation",
 						"reserve-concert"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "예약 취소",
-			"request": {
-				"auth": {
-					"type": "bearer",
-					"bearer": [
-						{
-							"key": "token",
-							"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0ZXN0QHRlc3QuY29tIiwiaWF0IjoxNzM1MzY5NDgyLCJleHAiOjE3MzUzNzMwODJ9.xYPq5YfLc_bBr7_J6kmP-iJob4nF3FD4cRX9qJZ76BM",
-							"type": "string"
-						}
-					]
-				},
-				"method": "POST",
-				"header": [],
-				"body": {
-					"mode": "raw",
-					"raw": "{\r\n    \"reservationId\" : \"cab0f905-a14c-4ae4-8af4-0c8b5c3788e4\"\r\n}",
-					"options": {
-						"raw": {
-							"language": "json"
-						}
-					}
-				},
-				"url": {
-					"raw": "http://haisia-concertly.duckdns.org/api/reservation/cancel",
-					"protocol": "http",
-					"host": [
-						"haisia-concertly",
-						"duckdns",
-						"org"
-					],
-					"path": [
-						"api",
-						"reservation",
-						"cancel"
 					]
 				}
 			},
@@ -381,6 +254,176 @@
 						"api",
 						"reservation",
 						"fetch-owns"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "예약 취소",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0ZXN0QHRlc3QuY29tIiwiaWF0IjoxNzM1NzA2MzkxLCJleHAiOjE3MzU3MDk5OTF9.MSF8sTJwJ1iBLZQKjyHROH72dDRY5MOpslt6JBYv-c0",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"reservationId\" : \"3ab277f0-4241-4e9b-a80a-54f4ec44a9dd\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://haisia-concertly.duckdns.org/api/reservation/cancel",
+					"protocol": "http",
+					"host": [
+						"haisia-concertly",
+						"duckdns",
+						"org"
+					],
+					"path": [
+						"api",
+						"reservation",
+						"cancel"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "콘서트 생성",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0ZXN0QHRlc3QuY29tIiwiaWF0IjoxNzM1NzA2MzkxLCJleHAiOjE3MzU3MDk5OTF9.MSF8sTJwJ1iBLZQKjyHROH72dDRY5MOpslt6JBYv-c0",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Beaer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0ZXN0QHRlc3QuY29tIiwiaWF0IjoxNzM1MzA2NzU2LCJleHAiOjE3MzUzMTAzNTZ9.X2bowWM9bxt47yiYD3uMszPaviqw_D3va_yxrhWWCg0",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"title\" : \"이창섭 단독 콘서트 〈The Wayfarer〉 - 청주\",\r\n    \"location\" : \"석우문화체육관\",\r\n    \"startTime\" : \"2028-12-28T19:00:00\",\r\n    \"endTime\" : \"2029-12-28T22:00:00\",\r\n    \"seatList\": [\r\n        {\r\n            \"seatLabel\" : \"A\",\r\n            \"seatMaxLineNumber\" : \"10\",\r\n            \"price\" : \"10000\"\r\n        },\r\n        {\r\n            \"seatLabel\" : \"B\",\r\n            \"seatMaxLineNumber\" : \"20\",\r\n            \"price\" : \"20000\"\r\n        }\r\n    ]\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://haisia-concertly.duckdns.org/api/concert/create",
+					"protocol": "http",
+					"host": [
+						"haisia-concertly",
+						"duckdns",
+						"org"
+					],
+					"path": [
+						"api",
+						"concert",
+						"create"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "콘서트 댓글 작성",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0ZXN0QHRlc3QuY29tIiwiaWF0IjoxNzM1NzA2MzkxLCJleHAiOjE3MzU3MDk5OTF9.MSF8sTJwJ1iBLZQKjyHROH72dDRY5MOpslt6JBYv-c0",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"concertId\" : \"0d3e6779-f42a-4faf-a78c-033014bcd8bd\",\r\n    \"comment\": \"댓글!\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://haisia-concertly.duckdns.org/api/concert/create-comment",
+					"protocol": "http",
+					"host": [
+						"haisia-concertly",
+						"duckdns",
+						"org"
+					],
+					"path": [
+						"api",
+						"concert",
+						"create-comment"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "댓글 삭제",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0ZXN0QHRlc3QuY29tIiwiaWF0IjoxNzM1NzA2MzkxLCJleHAiOjE3MzU3MDk5OTF9.MSF8sTJwJ1iBLZQKjyHROH72dDRY5MOpslt6JBYv-c0",
+							"type": "string"
+						}
+					]
+				},
+				"method": "DELETE",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"commentId\" : \"0d3e6779-f42a-4faf-a78c-033014bcd8bd\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://haisia-concertly.duckdns.org/api/concert/delete-comment",
+					"protocol": "http",
+					"host": [
+						"haisia-concertly",
+						"duckdns",
+						"org"
+					],
+					"path": [
+						"api",
+						"concert",
+						"delete-comment"
 					]
 				}
 			},
