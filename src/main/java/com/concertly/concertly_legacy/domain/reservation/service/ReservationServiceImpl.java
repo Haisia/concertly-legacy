@@ -46,7 +46,7 @@ public class ReservationServiceImpl implements ReservationService {
       .orElseThrow(() -> new NotFoundException("User", "id", requesterId.toString()));
 
     Reservation reservation = Reservation.reserve(foundSeat, user);
-    reservationRepository.save(reservation);
+    reservation = reservationRepository.save(reservation);
 
     return BaseReservationDtoBuilder.builder(reservation)
       .withConcert()

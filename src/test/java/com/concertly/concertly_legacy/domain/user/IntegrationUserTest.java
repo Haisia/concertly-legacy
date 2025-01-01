@@ -49,7 +49,7 @@ public class IntegrationUserTest {
     CreateUserRequest request = UserSamples.createUserRequest();
 
     //when
-    String savedEmail = userService.create(request);
+    String savedEmail = userService.create(request).getEmail();
 
     //then
     assertEquals(request.getEmail(), savedEmail);
@@ -131,12 +131,12 @@ public class IntegrationUserTest {
 
   private String createUser() {
     CreateUserRequest createUserRequest = UserSamples.createUserRequest();
-    return userService.create(createUserRequest);
+    return userService.create(createUserRequest).getEmail();
   }
 
   private UUID createConcert() {
     CreateConcertRequest concertRequest = ConcertSamples.createConcertRequest();
-    UUID concertId = concertService.create(concertRequest, UUID.randomUUID());
+    UUID concertId = concertService.create(concertRequest, UUID.randomUUID()).getId();
     Concert concert = concertRepository.findById(concertId).get();
     concertService.saveSeatList(concertRequest, concert)
       .forEach(concert.getSeatList()::add);

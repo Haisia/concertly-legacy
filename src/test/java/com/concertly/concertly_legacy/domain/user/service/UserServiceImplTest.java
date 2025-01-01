@@ -54,7 +54,7 @@ public class UserServiceImplTest {
     when(userRepository.existsByEmail(request.getEmail())).thenReturn(false);
     when(userRepository.save(any())).thenReturn(user);
 
-    String email = userService.create(request);
+    String email = userService.create(request).getEmail();
     verify(userRepository, times(1)).existsByEmail(request.getEmail());
 
     assertEquals(user.getEmail(), email);

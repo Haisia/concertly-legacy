@@ -45,13 +45,13 @@ public class ConcertServiceImpl implements ConcertService {
       .endTime(request.getEndTime())
       .build();
 
-    concertRepository.save(concert);
+    Concert savedConcert = concertRepository.save(concert);
     em.flush();
-    saveSeatList(request, concert);
-    em.merge(concert);
+    saveSeatList(request, savedConcert);
+    em.merge(savedConcert);
 
-    log.info("{}님이 {} 콘서트와 좌석을 생성하였습니다.", requesterId, concert.getId());
-    return BaseConcertDtoBuilder.builder(concert)
+    log.info("{}님이 {} 콘서트와 좌석을 생성하였습니다.", requesterId, savedConcert.getId());
+    return BaseConcertDtoBuilder.builder(savedConcert)
       .withSeats()
       .withComments()
       .build();

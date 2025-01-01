@@ -1,5 +1,6 @@
 package com.concertly.concertly_legacy.domain.concert;
 
+import com.concertly.concertly_legacy.domain.concert.dto.BaseConcertDto;
 import com.concertly.concertly_legacy.domain.concert.entity.Concert;
 import com.concertly.concertly_legacy.domain.concert.repository.ConcertRepository;
 import com.concertly.concertly_legacy.domain.concert.service.ConcertService;
@@ -8,7 +9,6 @@ import com.concertly.concertly_legacy.domain.user.service.UserService;
 import com.concertly.concertly_legacy.smaple.ConcertSamples;
 import com.concertly.concertly_legacy.web.concert.dto.CreateConcertRequest;
 import com.concertly.concertly_legacy.web.concert.dto.FetchReservableConcertSeatsRequest;
-import com.concertly.concertly_legacy.web.concert.dto.FetchReservableConcertSeatsResponse;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import org.junit.jupiter.api.Test;
@@ -40,15 +40,15 @@ public class IntegrationConcertTest {
     Concert concert = createConcert();
 
     //when
-    List<FetchReservableConcertSeatsResponse> responses = concertService.fetchReservableConcerts();
+    List<BaseConcertDto> results = concertService.fetchReservableConcerts();
 
     //then
-    assertEquals(1, responses.size());
-    FetchReservableConcertSeatsResponse response = responses.get(0);
-    assertEquals(concert.getTitle(), response.getConcertName());
-    assertEquals(concert.getStartTime(), response.getConcertStartTime());
-    assertEquals(concert.getEndTime(), response.getConcertEndTime());
-    assertFalse(response.getReservableSeatResponses().isEmpty());
+    assertEquals(1, results.size());
+    BaseConcertDto result = results.get(0);
+    assertEquals(concert.getTitle(), result.getTitle());
+    assertEquals(concert.getStartTime(), result.getStartTime());
+    assertEquals(concert.getEndTime(), result.getEndTime());
+    assertFalse(result.getSeatList().isEmpty());
   }
 
   @Test
@@ -58,24 +58,24 @@ public class IntegrationConcertTest {
 
     //when
     FetchReservableConcertSeatsRequest request = new FetchReservableConcertSeatsRequest(concert.getId());
-    FetchReservableConcertSeatsResponse response = concertService.fetchReservableSeats(request);
+    BaseConcertDto concertDto = concertService.fetchReservableSeats(request);
 
     //then
-    assertEquals(concert.getTitle(), response.getConcertName());
-    assertEquals(concert.getStartTime(), response.getConcertStartTime());
-    assertEquals(concert.getEndTime(), response.getConcertEndTime());
-    assertFalse(response.getReservableSeatResponses().isEmpty());
+    assertEquals(concert.getTitle(), concertDto.getTitle());
+    assertEquals(concert.getStartTime(), concertDto.getStartTime());
+    assertEquals(concert.getEndTime(), concertDto.getEndTime());
+    assertFalse(concertDto.getSeatList().isEmpty());
   }
 
   private Concert createConcert() {
     CreateConcertRequest concertRequest = ConcertSamples.createConcertRequest();
-    UUID concertId = concertService.create(concertRequest, UUID.randomUUID());
-    Concert concert = concertRepository.findById(concertId).get();
+    BaseConcertDto concertDto = concertService.create(concertRequest, UUID.randomUUID());
+    Concert concert = concertRepository.findById(concertDto.getId()).get();
     concertService.saveSeatList(concertRequest, concert)
       .forEach(concert.getSeatList()::add);
 
     em.clear();
-    concert = concertRepository.findById(concertId).get();
+    concert = concertRepository.findById(concert.getId()).get();
     return concert;
   }
 }

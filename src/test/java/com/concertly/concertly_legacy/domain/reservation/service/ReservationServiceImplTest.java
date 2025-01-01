@@ -7,13 +7,13 @@ import com.concertly.concertly_legacy.commons.exceptions.UnableStatusException;
 import com.concertly.concertly_legacy.domain.concert.entity.Concert;
 import com.concertly.concertly_legacy.domain.concert.entity.Seat;
 import com.concertly.concertly_legacy.domain.concert.repository.ConcertRepository;
+import com.concertly.concertly_legacy.domain.reservation.dto.BaseReservationDto;
 import com.concertly.concertly_legacy.domain.reservation.entity.Reservation;
 import com.concertly.concertly_legacy.domain.reservation.repository.ReservationRepository;
 import com.concertly.concertly_legacy.domain.user.entity.User;
 import com.concertly.concertly_legacy.domain.user.repository.UserRepository;
 import com.concertly.concertly_legacy.smaple.ReservationSamples;
 import com.concertly.concertly_legacy.web.reservation.dto.CancelReservationRequest;
-import com.concertly.concertly_legacy.web.reservation.dto.FetchOwnReservationResponse;
 import com.concertly.concertly_legacy.web.reservation.dto.ReserveConcertRequest;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -81,7 +81,7 @@ public class ReservationServiceImplTest {
 
     when(reservationRepository.save(any())).thenReturn(reserve);
 
-    assertEquals(reserveId, reservationService.concertReservation(request, requesterId).getReservationId());
+    assertEquals(reserveId, reservationService.concertReservation(request, requesterId).getId());
     verify(concertRepository, times(1)).findWithSeatsById(request.getConcertId());
     verify(userRepository, times(1)).findById(requesterId);
     verify(reservationRepository, times(1)).save(any());
@@ -141,10 +141,10 @@ public class ReservationServiceImplTest {
     Reservation.reserve(seat, user);
     UUID requesterId = user.getId();
     when(userRepository.findById(requesterId)).thenReturn(Optional.of(user));
-    FetchOwnReservationResponse response = reservationService.fetchOwns(requesterId).get(0);
+    BaseReservationDto baseReservationDto = reservationService.fetchOwns(requesterId).get(0);
 
-    assertEquals(concert.getTitle(), response.getConcertTitle());
-    assertEquals(seat.getSeatNumber(), response.getSeatNumber());
+    assertEquals(concert.getTitle(), baseReservationDto.getConcert().getTitle());
+    assertEquals(seat.getSeatNumber(), baseReservationDto.getSeat().getSeatNumber());
     verify(userRepository, times(1)).findById(requesterId);
   }
 

@@ -4,6 +4,7 @@ import com.concertly.concertly_legacy.commons.exceptions.UnableStatusException;
 import com.concertly.concertly_legacy.domain.concert.entity.Concert;
 import com.concertly.concertly_legacy.domain.concert.repository.ConcertRepository;
 import com.concertly.concertly_legacy.domain.concert.service.ConcertService;
+import com.concertly.concertly_legacy.domain.reservation.dto.BaseReservationDto;
 import com.concertly.concertly_legacy.domain.reservation.entity.Reservation;
 import com.concertly.concertly_legacy.domain.reservation.repository.ReservationRepository;
 import com.concertly.concertly_legacy.domain.reservation.service.ReservationService;
@@ -13,7 +14,6 @@ import com.concertly.concertly_legacy.domain.user.service.UserService;
 import com.concertly.concertly_legacy.smaple.ConcertSamples;
 import com.concertly.concertly_legacy.smaple.UserSamples;
 import com.concertly.concertly_legacy.web.concert.dto.CreateConcertRequest;
-import com.concertly.concertly_legacy.web.reservation.dto.FetchOwnReservationResponse;
 import com.concertly.concertly_legacy.web.reservation.dto.ReserveConcertRequest;
 import com.concertly.concertly_legacy.web.user.dto.ChargePointRequest;
 import com.concertly.concertly_legacy.web.user.dto.CreateUserRequest;
@@ -60,10 +60,10 @@ public class IntegrationReservationTest {
     //when & then
     assertThat(user.currentPoints()).isEqualTo(100000L);
     ReserveConcertRequest request = new ReserveConcertRequest(concert.getId(), "A1");
-    UUID reservationId = reservationService.concertReservation(request, user.getId()).getReservationId();
+    BaseReservationDto baseReservationDto = reservationService.concertReservation(request, user.getId());
     assertThat(user.currentPoints()).isLessThan(100000L);
 
-    reservationRepository.findById(reservationId).get().cancel();
+    reservationRepository.findById(baseReservationDto.getId()).get().cancel();
     assertThat(user.currentPoints()).isEqualTo(100000L);
   }
 
@@ -74,17 +74,17 @@ public class IntegrationReservationTest {
     Concert concert = concertRepository.findById(createConcert()).get();
     userService.chargePoint(new ChargePointRequest(100000L), user.getId());
     ReserveConcertRequest request = new ReserveConcertRequest(concert.getId(), "A1");
-    UUID reservationId = reservationService.concertReservation(request, user.getId()).getReservationId();
+    UUID reservationId = reservationService.concertReservation(request, user.getId()).getId();
 
     //when
-    List<FetchOwnReservationResponse> responseList = reservationService.fetchOwns(user.getId());
+    List<BaseReservationDto> baseReservationDtos = reservationService.fetchOwns(user.getId());
 
     //then
-    assertEquals(1, responseList.size());
-    FetchOwnReservationResponse response = responseList.get(0);
-    assertEquals(reservationId, response.getReservationId());
-    assertEquals("A1", response.getSeatNumber());
-    assertEquals(ConcertSamples.createConcertRequest().getSeatList().get(0).getPrice(), response.getPrice());
+    assertEquals(1, baseReservationDtos.size());
+    BaseReservationDto baseReservationDto = baseReservationDtos.get(0);
+    assertEquals(reservationId, baseReservationDto.getId());
+    assertEquals("A1", baseReservationDto.getSeat().getSeatNumber());
+    assertEquals(ConcertSamples.createConcertRequest().getSeatList().get(0).getPrice(), baseReservationDto.getSeat().getPrice());
   }
 
   @Test
@@ -96,7 +96,7 @@ public class IntegrationReservationTest {
     //when
     userService.chargePoint(new ChargePointRequest(100000L), user.getId());
     ReserveConcertRequest request = new ReserveConcertRequest(concert.getId(), "A1");
-    UUID reservationId = reservationService.concertReservation(request, user.getId()).getReservationId();
+    UUID reservationId = reservationService.concertReservation(request, user.getId()).getId();
     Reservation reservation = reservationRepository.findById(reservationId).get();
     concert.setStartTime(LocalDateTime.now().plusHours(3));
     concertRepository.save(concert);
@@ -114,7 +114,7 @@ public class IntegrationReservationTest {
     //when
     userService.chargePoint(new ChargePointRequest(100000L), user.getId());
     ReserveConcertRequest request = new ReserveConcertRequest(concert.getId(), "A1");
-    UUID reservationId = reservationService.concertReservation(request, user.getId()).getReservationId();
+    UUID reservationId = reservationService.concertReservation(request, user.getId()).getId();
     Reservation reservation = reservationRepository.findById(reservationId).get();
 
     //then
@@ -123,12 +123,12 @@ public class IntegrationReservationTest {
 
   private String createUser() {
     CreateUserRequest createUserRequest = UserSamples.createUserRequest();
-    return userService.create(createUserRequest);
+    return userService.create(createUserRequest).getEmail();
   }
 
   private UUID createConcert() {
     CreateConcertRequest concertRequest = ConcertSamples.createConcertRequest();
-    UUID concertId = concertService.create(concertRequest, UUID.randomUUID());
+    UUID concertId = concertService.create(concertRequest, UUID.randomUUID()).getId();
     Concert concert = concertRepository.findById(concertId).get();
     concertService.saveSeatList(concertRequest, concert)
       .forEach(concert.getSeatList()::add);

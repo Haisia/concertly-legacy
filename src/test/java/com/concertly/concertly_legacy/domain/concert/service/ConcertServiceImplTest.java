@@ -1,6 +1,7 @@
 package com.concertly.concertly_legacy.domain.concert.service;
 
 import com.concertly.concertly_legacy.commons.exceptions.NotFoundException;
+import com.concertly.concertly_legacy.domain.concert.dto.BaseConcertDto;
 import com.concertly.concertly_legacy.domain.concert.entity.Concert;
 import com.concertly.concertly_legacy.domain.concert.entity.Seat;
 import com.concertly.concertly_legacy.domain.concert.repository.ConcertCommentRepository;
@@ -11,7 +12,6 @@ import com.concertly.concertly_legacy.smaple.ConcertSamples;
 import com.concertly.concertly_legacy.web.concert.dto.CreateConcertCommentRequest;
 import com.concertly.concertly_legacy.web.concert.dto.CreateConcertRequest;
 import com.concertly.concertly_legacy.web.concert.dto.FetchReservableConcertSeatsRequest;
-import com.concertly.concertly_legacy.web.concert.dto.FetchReservableConcertSeatsResponse;
 import jakarta.persistence.EntityManager;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -72,9 +72,12 @@ public class ConcertServiceImplTest {
     concert.setId(UUID.randomUUID());
 
     when(concertRepository.save(any())).thenReturn(concert);
-    UUID createdConcertId = concertService.create(request, UUID.randomUUID());
+    BaseConcertDto concertDto = concertService.create(request, UUID.randomUUID());
 
-    assertEquals(concert.getId(), createdConcertId);
+    assertEquals(concert.getTitle(), concertDto.getTitle());
+    assertEquals(concert.getLocation(), concertDto.getLocation());
+    assertEquals(concert.getStartTime(), concertDto.getStartTime());
+    assertEquals(concert.getEndTime(), concertDto.getEndTime());
   }
 
   @Test
@@ -117,12 +120,12 @@ public class ConcertServiceImplTest {
     FetchReservableConcertSeatsRequest request = ConcertSamples.fetchReservableConcertSeatsRequest();
     when(concertRepository.findById(request.getConcertId())).thenReturn(Optional.of(concert));
 
-    FetchReservableConcertSeatsResponse response = concertService.fetchReservableSeats(request);
-    assertEquals(concert.findAvailableSeatList().size(), response.getReservableSeatResponses().size());
+    BaseConcertDto concertDto = concertService.fetchReservableSeats(request);
+    assertEquals(concert.findAvailableSeatList().size(), concertDto.getSeatList().size());
   }
 
   @Test
-  public void fetchReservableSeats_존재하지않는콘서트조회요청시예외발생() throws Exception {
+  public void fetchReservableSeats_존재하지않는콘서트조회요청시예외발생() {
     FetchReservableConcertSeatsRequest request = ConcertSamples.fetchReservableConcertSeatsRequest();
     assertThrows(NotFoundException.class, () -> concertService.fetchReservableSeats(request));
   }
@@ -130,7 +133,7 @@ public class ConcertServiceImplTest {
   @Test
   public void fetchReservableConcerts() {
     when(concertRepository.findAll()).thenReturn(List.of(concert));
-    List<FetchReservableConcertSeatsResponse> response = concertService.fetchReservableConcerts();
-    assertEquals(concert.findAvailableSeatList().size(), response.size());
+    BaseConcertDto concertDto = concertService.fetchReservableConcerts().get(0);
+    assertEquals(concert.findAvailableSeatList().size(), concertDto.getSeatList().size());
   }
 }
