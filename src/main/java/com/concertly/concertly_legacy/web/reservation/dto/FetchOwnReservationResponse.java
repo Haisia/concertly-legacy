@@ -2,6 +2,7 @@ package com.concertly.concertly_legacy.web.reservation.dto;
 
 import com.concertly.concertly_legacy.commons.dto.BaseDto;
 import com.concertly.concertly_legacy.domain.reservation.dto.BaseReservationDto;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
 
@@ -16,6 +17,7 @@ import static com.concertly.concertly_legacy.commons.constants.DtoMetadataConsta
 @Builder
 @NoArgsConstructor @AllArgsConstructor
 @Data
+@JsonPropertyOrder({"reservationId", "seatId", "concertTitle", "seatNumber", "price", "concertStartTime", "concertEndTime", "reservedAt"})
 public class FetchOwnReservationResponse extends BaseDto {
 
   @Schema(description = ID_SCHEMA_DESCRIPTION, example = ID_SCHEMA_EXAMPLE)
@@ -45,7 +47,7 @@ public class FetchOwnReservationResponse extends BaseDto {
   public static FetchOwnReservationResponse from(BaseReservationDto dto) {
     FetchOwnReservationResponse result = FetchOwnReservationResponse.fromBase(dto, FetchOwnReservationResponse.class);
     result.setReservationId(dto.getId());
-    result.setSeatId(dto.getSeat().getId());
+    result.setSeatId(dto.getSeat().getConcertId());
     result.setConcertTitle(dto.getConcert().getTitle());
     result.setSeatNumber(dto.getSeat().getSeatNumber());
     result.setPrice(dto.getSeat().getPrice());

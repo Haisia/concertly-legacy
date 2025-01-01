@@ -3,6 +3,7 @@ package com.concertly.concertly_legacy.web.concert.dto;
 import com.concertly.concertly_legacy.commons.dto.BaseDto;
 import com.concertly.concertly_legacy.domain.concert.dto.BaseConcertDto;
 import com.concertly.concertly_legacy.domain.concert.dto.BaseSeatDto;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
 
@@ -17,13 +18,14 @@ import static com.concertly.concertly_legacy.commons.constants.DtoMetadataConsta
 @Builder
 @NoArgsConstructor @AllArgsConstructor
 @Data
+@JsonPropertyOrder({"concertId", "concertTitle", "concertStartTime", "concertEndTime", "reservableSeatResponses"})
 public class FetchReservableConcertSeatsResponse extends BaseDto {
 
   @Schema(description = ID_SCHEMA_DESCRIPTION, example = ID_SCHEMA_EXAMPLE)
-  public UUID id;
+  public UUID concertId;
 
   @Schema(description = CONCERT_TITLE_SCHEMA_DESCRIPTION, example = CONCERT_TITLE_SCHEMA_EXAMPLE)
-  public String concertName;
+  public String concertTitle;
 
   @Schema(description = CONCERT_START_TIME_SCHEMA_DESCRIPTION, example = CONCERT_START_TIME_SCHEMA_EXAMPLE)
   public LocalDateTime concertStartTime;
@@ -36,8 +38,8 @@ public class FetchReservableConcertSeatsResponse extends BaseDto {
 
   public static FetchReservableConcertSeatsResponse from(BaseConcertDto dto) {
     FetchReservableConcertSeatsResponse response = FetchReservableConcertSeatsResponse.fromBase(dto, FetchReservableConcertSeatsResponse.class);
-    response.setId(dto.getId());
-    response.setConcertName(dto.getTitle());
+    response.setConcertId(dto.getId());
+    response.setConcertTitle(dto.getTitle());
     response.setConcertStartTime(dto.getStartTime());
     response.setConcertEndTime(dto.getEndTime());
     response.setReservableSeatResponses(ReservableSeatResponse.from(dto.getSeatList()));

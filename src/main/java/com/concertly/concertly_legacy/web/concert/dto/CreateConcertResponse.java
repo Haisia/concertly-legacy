@@ -4,6 +4,7 @@ import com.concertly.concertly_legacy.commons.dto.BaseDto;
 import com.concertly.concertly_legacy.commons.enums.SeatStatus;
 import com.concertly.concertly_legacy.domain.concert.dto.BaseConcertDto;
 import com.concertly.concertly_legacy.domain.concert.dto.BaseSeatDto;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -13,6 +14,7 @@ import java.util.UUID;
 
 @EqualsAndHashCode(callSuper = true)
 @Data
+@JsonPropertyOrder({"concertId", "title", "location", "startTime", "endTime", "seats"})
 public class CreateConcertResponse extends BaseDto {
   public UUID concertId;
   public String title;

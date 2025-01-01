@@ -2,6 +2,7 @@ package com.concertly.concertly_legacy.web.reservation.dto;
 
 import com.concertly.concertly_legacy.commons.dto.BaseDto;
 import com.concertly.concertly_legacy.domain.reservation.dto.BaseReservationDto;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -17,6 +18,7 @@ import static com.concertly.concertly_legacy.commons.constants.DtoMetadataConsta
 @Schema(description = "콘서트 예약 응답 Dto")
 @NoArgsConstructor @AllArgsConstructor
 @Data
+@JsonPropertyOrder({"reservationId", "concertTitle", "location", "startTime", "endTime", "seatNumber", "price", "buyerEmail"})
 public class ReservationConcertResponse extends BaseDto {
 
   @Schema(description = ID_SCHEMA_DESCRIPTION, example = ID_SCHEMA_EXAMPLE)
