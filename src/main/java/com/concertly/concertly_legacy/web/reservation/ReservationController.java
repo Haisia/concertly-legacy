@@ -87,10 +87,10 @@ public class ReservationController {
   })
   @NeedLogin
   @GetMapping("/fetch-owns")
-  public ResponseEntity<List<FetchOwnReservationResponse>> fetchReservations(@AuthenticationPrincipal ConcertlyUserDetail userDetail){
+  public BaseResponse<List<FetchOwnReservationResponse>> fetchReservations(@AuthenticationPrincipal ConcertlyUserDetail userDetail){
     UUID requesterId = userDetail.getUser().getId();
     List<BaseReservationDto> results = reservationService.fetchOwns(requesterId);
-    return ResponseEntity.ok().body(FetchOwnReservationResponse.from(results));
+    return new BaseResponse<>(FetchOwnReservationResponse.from(results));
   }
 
 }
