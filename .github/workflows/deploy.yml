@@ -45,9 +45,12 @@ jobs:
       - name: Deploy to Server
         uses: appleboy/ssh-action@v1.2.0
         with:
-          host: ${{ secrets.CLOUD_SERVER_HOST }}
-          username: ${{ secrets.CLOUD_SERVER_USER }}
+          host: ${{ secrets.CLOUD_SERVER_HOST }} # 클라우드 서버 IP
+          username: ${{ secrets.CLOUD_SERVER_USER }} # 서버 사용자명
+          password: ${{ secrets.CLOUD_SERVER_PASSWORD }} # (패스워드 또는 SSH Key 필요)
+          port: 22
           key: ${{ secrets.SSH_PRIVATE_KEY }}
+          passphrase: ${{ secrets.SSH_PASSPHRASE }}
           script: |
             echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
             docker pull wnsgur13579/concertly:latest
