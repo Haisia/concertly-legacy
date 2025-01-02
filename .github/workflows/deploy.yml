@@ -29,10 +29,7 @@ jobs:
       # 4. Gradle 빌드 및 이미지 생성
       - name: Build Docker image without Dockerfile
         run: |
-          export BPL_JVM_HEAD_ROOM=0
-          export BPL_JVM_LOADED_CLASS_COUNT=0
-          export BPL_JVM_THREAD_COUNT=0
-          ./gradlew bootBuildImage
+          ./gradlew bootBuildImage -DjavaToolOptions="-Xmx256m -Xms128m -XX:MaxMetaspaceSize=64m -XX:ReservedCodeCacheSize=64m"
 
       # 5. Docker 로그인
       - name: Log in to DockerHub
@@ -64,3 +61,4 @@ jobs:
               -p 8080:8080 \
               -v /home/${{ secrets.CLOUD_SERVER_USER }}/logs:/app/logs \
               wnsgur13579/concertly:latest \
+              java -Xmx256m -Xms128m -XX:MaxMetaspaceSize=64m -XX:ReservedCodeCacheSize=64m
