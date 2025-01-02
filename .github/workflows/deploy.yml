@@ -28,7 +28,11 @@ jobs:
 
       # 4. Gradle 빌드 및 이미지 생성
       - name: Build Docker image without Dockerfile
-        run: ./gradlew bootBuildImage
+        run: |
+          export BPL_JVM_HEAD_ROOM=0
+          export BPL_JVM_LOADED_CLASS_COUNT=0
+          export BPL_JVM_THREAD_COUNT=0
+          ./gradlew bootBuildImage
 
       # 5. Docker 로그인
       - name: Log in to DockerHub
@@ -55,4 +59,8 @@ jobs:
             echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
             docker pull wnsgur13579/concertly:latest
             docker stop concertly-app || true && docker rm concertly-app || true
-            docker run -d --name concertly-app -p 8080:8080 -v /home/${{ secrets.CLOUD_SERVER_USER }}/logs:/app/logs wnsgur13579/concertly:latest
+            docker run -d \
+              --name concertly-app \
+              -p 8080:8080 \
+              -v /home/${{ secrets.CLOUD_SERVER_USER }}/logs:/app/logs \
+              wnsgur13579/concertly:latest \
